@@ -327,15 +327,14 @@ für Fertigprodukt diese Simulationen.</p>
     }
 
     function makeCard(item) {
-      var card = document.createElement('a');
+      var card = document.createElement('article');
       card.className = 'simulation-card tone-' + (categoryTone[item.category] || 'slate');
-      card.href = item.href;
       card.setAttribute('data-category', item.category);
       card.innerHTML =
         '<span class="card-family">' + (categoryNames[item.category] || item.category) +
         '</span><strong>' + item.label +
-        '</strong><span class="card-path">' + item.path +
-        '</span><span class="card-open">Open</span>';
+        '</strong><a class="card-open" href="' + item.href +
+        '">Open simulation</a>';
       return card;
     }
 
