@@ -133,10 +133,39 @@
       'share': 'compartilhar',\
       'spring stiffness': 'rigidez da mola',\
       'spring damping': 'amortecimento da mola',\
+      'sim-width': 'largura da simulação',\
+      'graph-width': 'largura do gráfico',\
+      'time-graph-width': 'largura do gráfico temporal',\
+      'layout': 'layout',\
+      'diff eq solver': 'solucionador diferencial',\
+      'Diff Eq Solver': 'solucionador diferencial',\
+      'Euler': 'Euler',\
+      'Runge Kutta': 'Runge-Kutta',\
+      'Runge-Kutta': 'Runge-Kutta',\
+      'point mass': 'massa pontual',\
+      'polygon': 'polígono',\
+      'wall bottom': 'parede inferior',\
+      'wall right': 'parede direita',\
+      'wall left': 'parede esquerda',\
+      'wall top': 'parede superior',\
+      'anchor1 X': 'âncora 1 X',\
+      'anchor1 Y': 'âncora 1 Y',\
+      'anchor2 X': 'âncora 2 X',\
+      'anchor2 Y': 'âncora 2 Y',\
+      'chain links': 'elos da corrente',\
+      'straight line': 'linha reta',\
+      'attach right': 'fixar à direita',\
       'density': 'densidade',\
       'tension': 'tensão',\
       'shape': 'forma',\
       'number of points': 'número de pontos',\
+      'Flat': 'Plano',\
+      'Half Sine Pulse': 'Pulso de meia senoide',\
+      'Multiple Sine': 'Senoide múltipla',\
+      'Sine Pulse': 'Pulso senoidal',\
+      'Square Pulse': 'Pulso quadrado',\
+      'Triangle': 'Triângulo',\
+      'Triangle Pulse': 'Pulso triangular',\
       'repeat time': 'tempo de repetição',\
       'collision method': 'método de colisão',\
       'collision accuracy': 'precisão da colisão',\
@@ -192,7 +221,17 @@
     };\
     function translated(value) {\
       var key = (value || '').trim();\
-      return map[key] || null;\
+      if (map[key]) { return map[key]; }\
+      var lower = key.toLowerCase();\
+      if (map[lower]) { return map[lower]; }\
+      var keys = Object.keys(map).sort(function(a, b) { return b.length - a.length; });\
+      for (var i = 0; i < keys.length; i++) {\
+        var k = keys[i];\
+        if (lower.indexOf(k.toLowerCase()) == 0) {\
+          return map[k] + key.slice(k.length);\
+        }\
+      }\
+      return null;\
     }\
     function localizeNodeText(node) {\
       for (var i = 0; i < node.childNodes.length; i++) {\
@@ -215,9 +254,13 @@
     }\
     function apply(root) {\
       var scope = root && root.querySelectorAll ? root : document;\
-      var nodes = scope.querySelectorAll('li,label,button,option,span');\
-      for (var i = 0; i < nodes.length; i++) {\
-        localizeNodeText(nodes[i]);\
+      var selector = 'li,label,button,option,span,div.slider';\
+      var nodes = Array.prototype.slice.call(scope.querySelectorAll(selector));\
+      if (scope.matches && scope.matches(selector)) {\
+        nodes.unshift(scope);\
+      }\
+      for (var n = 0; n < nodes.length; n++) {\
+        localizeNodeText(nodes[n]);\
       }\
     }\
     apply(document);\
