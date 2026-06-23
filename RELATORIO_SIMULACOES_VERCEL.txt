@@ -1,0 +1,41 @@
+Memoria de testes do deploy Vercel
+Data: 2026-06-23
+Site testado: https://myphysicslabv2.vercel.app/
+
+Resumo
+------
+Links de simulacoes/testes encontrados no indice publicado: 78
+Links carregados com sucesso no navegador: 78
+Links marcados como nao operando: 0
+
+Criterio usado
+--------------
+Cada pagina foi aberta no navegador a partir do indice publicado. A pagina foi
+considerada operando quando carregou sem erro fatal, nao exibiu pagina 404, tinha
+conteudo visivel, e apresentou canvas ou controles interativos.
+
+Lista de modelos nao operando
+-----------------------------
+Nenhum modelo foi identificado como nao operando no teste automatico.
+
+Verificacao no codigo fonte
+---------------------------
+Todos os 78 links do indice publicado existem como arquivos HTML em src/.
+
+Sete paginas nao possuem um arquivo TypeScript proprio com o mesmo nome, mas isso
+esta previsto no makefile: elas reaproveitam o JavaScript de outro simulador.
+
+Paginas com TypeScript reaproveitado:
+- sims/engine2D/Billiards2App -> usa sims/engine2D/CreateApp
+- sims/experimental/MultiGraphCalc2App -> usa sims/experimental/GraphCalc2App
+- sims/pendulum/CompareDoublePendulumApp2 -> usa sims/pendulum/CompareDoublePendulumApp
+- sims/pendulum/RigidDoublePendulumApp2 -> usa sims/pendulum/RigidDoublePendulumApp
+- sims/springs/Molecule2App -> usa sims/experimental/BlankSlateApp
+- sims/springs/MultiSpringApp -> usa sims/springs/SingleSpringApp
+- sims/springs/TerminalSpring2DApp -> usa sims/springs/TerminalSpringApp
+
+Conclusao
+---------
+O deploy atual esta operacional para os links de simulacao e teste publicados no
+indice. A tela inicial foi selecionada como principal ponto de melhoria, porque
+ela ainda apresentava os simuladores como uma lista simples.

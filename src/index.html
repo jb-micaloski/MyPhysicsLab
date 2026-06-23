@@ -9,17 +9,44 @@
 <head>
 #META_TAGS
 </head>
-<body>
-<a id="logo" href="#MYPHYSICSLAB_URL/index-#LOCALE.html">
-  <img src="#IMAGES_DIR/myphysicslogo.png" width="162" height="32">
-</a>
+<body class="platform-home">
+<main class="platform-shell">
+<header class="platform-hero">
+  <nav class="platform-topbar">
+    <a id="logo" href="#MYPHYSICSLAB_URL/index-#LOCALE.html">
+      <img src="#IMAGES_DIR/myphysicslogo.png" width="162" height="32"
+          alt="myPhysicsLab">
+    </a>
+    <div class="platform-language">
+      #LANGUAGE_MENU
+    </div>
+  </nav>
 
-<h1>MyPhysicsLab Examples</h1>
+  <div class="platform-hero-grid">
+    <section class="platform-title-block">
+      <p class="platform-kicker">Interactive mechanics library</p>
+      <h1>MyPhysicsLab simulations</h1>
+      <p class="platform-lede">Browse the published examples by physics family,
+      open a model, and start experimenting directly in the browser.</p>
+    </section>
+    <section class="platform-stats" aria-label="simulation totals">
+      <div>
+        <strong id="platform-total">78</strong>
+        <span>published pages</span>
+      </div>
+      <div>
+        <strong>7</strong>
+        <span>families</span>
+      </div>
+      <div>
+        <strong>Live</strong>
+        <span>Vercel build</span>
+      </div>
+    </section>
+  </div>
+</header>
 
 <ul id="header_bar">
-  <div>
-  #LANGUAGE_MENU
-  </div>
 </ul>
 
 #define en_INDEX_INTRO <p>Here are links to example files for software development and \
@@ -32,9 +59,25 @@ und Prüfung, alphabetisch sortiert. Bitte nützen Sie \
 <a href="#MYPHYSICSLAB_URL/index-#LOCALE.html">myPhysicsLab website</a> \
 für Fertigprodukt diese Simulationen.</p>
 
-##LOCALE#_INDEX_INTRO
+<section class="platform-controls" aria-label="simulation browser">
+  <label class="platform-search">
+    <span>Search</span>
+    <input id="simulation-search" type="search" autocomplete="off"
+        placeholder="pendulum, spring, engine...">
+  </label>
+  <div id="category-filters" class="category-filters"
+      aria-label="simulation categories"></div>
+</section>
+
+<section id="simulation-platform" class="simulation-platform"
+    aria-live="polite"></section>
+
+<section class="platform-note">
+  ##LOCALE#_INDEX_INTRO
+</section>
 
 #comment 2em line-height because Google Mobile-Friendly Test requires it
+<div id="simulation-data" class="sim-source">
 <p style="line-height: 2em">
 <a href="sims/engine2D/BilliardsApp-#LOCALE.html">
     sims/engine2D/BilliardsApp</a> <br>
@@ -193,6 +236,7 @@ für Fertigprodukt diese Simulationen.</p>
 <a href="test/UnitTest-#LOCALE.html">
     test/UnitTest</a> <br>
 </p>
+</div>
 
 <script>
   window.addEventListener('pageshow', function(event){
@@ -203,6 +247,146 @@ für Fertigprodukt diese Simulationen.</p>
     }
   }, /*capturing=*/false);
 </script>
+<script>
+  (function buildSimulationPlatform() {
+    var source = document.getElementById('simulation-data');
+    var target = document.getElementById('simulation-platform');
+    var filters = document.getElementById('category-filters');
+    var search = document.getElementById('simulation-search');
+    var total = document.getElementById('platform-total');
+    if (!source || !target || !filters || !search) {
+      return;
+    }
+    var categoryNames = {
+      engine2D: 'Engine 2D',
+      pendulum: 'Pendulums',
+      springs: 'Springs',
+      roller: 'Roller',
+      experimental: 'Experimental',
+      misc: 'Misc',
+      pde: 'PDE',
+      test: 'Tests'
+    };
+    var categoryOrder = [
+      'all', 'engine2D', 'pendulum', 'springs', 'roller',
+      'experimental', 'misc', 'pde', 'test'
+    ];
+    var categoryTone = {
+      engine2D: 'teal',
+      pendulum: 'blue',
+      springs: 'coral',
+      roller: 'amber',
+      experimental: 'violet',
+      misc: 'slate',
+      pde: 'green',
+      test: 'gray'
+    };
+    var links = Array.prototype.slice.call(source.querySelectorAll('a'));
+    var items = links.map(function(anchor) {
+      var path = anchor.getAttribute('href').replace('-#LOCALE.html', '');
+      var parts = path.split('/');
+      var category = parts[0] == 'test' ? 'test' : parts[1];
+      var label = parts[parts.length - 1]
+          .replace(/App$/, '')
+          .replace(/([a-z])([A-Z0-9])/g, '$1 $2')
+          .replace(/([0-9])([A-Z])/g, '$1 $2');
+      return {
+        href: anchor.getAttribute('href'),
+        path: path,
+        category: category,
+        label: label
+      };
+    });
+    var activeCategory = 'all';
+    if (total) {
+      total.textContent = String(items.length);
+    }
+    source.className += ' enhanced';
+
+    function renderFilters() {
+      filters.innerHTML = '';
+      categoryOrder.forEach(function(category) {
+        var count = category == 'all' ? items.length :
+            items.filter(function(item) { return item.category == category; }).length;
+        if (count == 0) {
+          return;
+        }
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'category-filter';
+        button.setAttribute('data-category', category);
+        button.setAttribute('aria-pressed', category == activeCategory ? 'true' : 'false');
+        button.textContent = (category == 'all' ? 'All' :
+            categoryNames[category] || category) + ' ' + count;
+        button.onclick = function() {
+          activeCategory = category;
+          render();
+        };
+        filters.appendChild(button);
+      });
+    }
+
+    function makeCard(item) {
+      var card = document.createElement('a');
+      card.className = 'simulation-card tone-' + (categoryTone[item.category] || 'slate');
+      card.href = item.href;
+      card.setAttribute('data-category', item.category);
+      card.innerHTML =
+        '<span class="card-family">' + (categoryNames[item.category] || item.category) +
+        '</span><strong>' + item.label +
+        '</strong><span class="card-path">' + item.path +
+        '</span><span class="card-open">Open</span>';
+      return card;
+    }
+
+    function render() {
+      var query = search.value.toLowerCase();
+      var visible = items.filter(function(item) {
+        var matchesCategory = activeCategory == 'all' ||
+            item.category == activeCategory;
+        var matchesQuery = !query ||
+            item.path.toLowerCase().indexOf(query) >= 0 ||
+            item.label.toLowerCase().indexOf(query) >= 0;
+        return matchesCategory && matchesQuery;
+      });
+      target.innerHTML = '';
+      var grouped = {};
+      visible.forEach(function(item) {
+        if (!grouped[item.category]) {
+          grouped[item.category] = [];
+        }
+        grouped[item.category].push(item);
+      });
+      categoryOrder.filter(function(category) {
+        return category != 'all' && grouped[category];
+      }).forEach(function(category) {
+        var section = document.createElement('section');
+        section.className = 'simulation-family';
+        var heading = document.createElement('h2');
+        heading.textContent = categoryNames[category] || category;
+        var grid = document.createElement('div');
+        grid.className = 'simulation-grid';
+        grouped[category].forEach(function(item) {
+          grid.appendChild(makeCard(item));
+        });
+        section.appendChild(heading);
+        section.appendChild(grid);
+        target.appendChild(section);
+      });
+      if (!visible.length) {
+        var empty = document.createElement('p');
+        empty.className = 'platform-empty';
+        empty.textContent = 'No matching simulations.';
+        target.appendChild(empty);
+      }
+      renderFilters();
+    }
+
+    search.oninput = render;
+    render();
+  }());
+</script>
+</main>
 #PAGE_FOOTER
 </body>
 </html>
