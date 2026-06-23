@@ -272,13 +272,13 @@ für Fertigprodukt diese Simulationen.</p>
       'experimental', 'misc', 'pde', 'test'
     ];
     var categoryTone = {
-      engine2D: 'teal',
+      engine2D: 'blue',
       pendulum: 'blue',
-      springs: 'coral',
-      roller: 'amber',
-      experimental: 'violet',
-      misc: 'slate',
-      pde: 'green',
+      springs: 'orange',
+      roller: 'gray',
+      experimental: 'lightblue',
+      misc: 'darkgray',
+      pde: 'navy',
       test: 'gray'
     };
     var links = Array.prototype.slice.call(source.querySelectorAll('a'));
@@ -328,7 +328,7 @@ für Fertigprodukt diese Simulationen.</p>
 
     function makeCard(item) {
       var card = document.createElement('article');
-      card.className = 'simulation-card tone-' + (categoryTone[item.category] || 'slate');
+      card.className = 'simulation-card tone-' + (categoryTone[item.category] || 'darkgray');
       card.setAttribute('data-category', item.category);
       card.innerHTML =
         '<span class="card-family">' + (categoryNames[item.category] || item.category) +

@@ -20,19 +20,21 @@ html {
 }
 
 :root {
-  --petrol-950: #06191f;
-  --petrol-900: #0a2630;
-  --petrol-800: #103744;
-  --petrol-700: #164a59;
-  --petrol-100: #d9edf0;
-  --surface: #f4f8f8;
+  --petrol-950: #102040;
+  --petrol-900: #203060;
+  --petrol-800: #204060;
+  --petrol-700: #4070c0;
+  --petrol-100: #e0e0f0;
+  --surface: #f3f4f7;
   --surface-strong: #ffffff;
-  --line: #b9cbd0;
-  --accent: #2dd4bf;
-  --accent-strong: #0f766e;
-  --warm: #f59e72;
-  --ink: #122129;
-  --muted: #58707a;
+  --line: #c0c0c0;
+  --accent: #4070c0;
+  --accent-strong: #203060;
+  --warm: #f08030;
+  --ink: #102040;
+  --muted: #606060;
+  --slide-gray: #606060;
+  --slide-gray-light: #e0e0e0;
 }
 
 body {
@@ -92,7 +94,7 @@ ul.horiz_tabs li {
 }
 ul.horiz_tabs li.selected {
   background: var(--accent);
-  color: #062027;
+  color: #ffffff;
   border-color: var(--accent);
 }
 /* this div contains language_menu and next/prev nav_links */
@@ -218,10 +220,10 @@ button.icon {
   padding: 2px;
   border: 1px solid transparent;
   border-radius: 6px;
-  background-color: rgba(15, 118, 110, 0.08);
+  background-color: rgba(64, 112, 192, 0.1);
 }
 button.icon:active {
-  background-color: rgba(245, 158, 114, 0.34);
+  background-color: rgba(240, 128, 48, 0.28);
 }
 /* kludge for Firefox to get buttons to be same size as icon images they contain.
 * http://stackoverflow.com/questions/8859908/buttons-too-tall-on-firefox
@@ -343,7 +345,7 @@ body.platform-home a#logo {
   gap: 24px;
   padding: 28px 30px;
   background:
-      linear-gradient(135deg, rgba(45, 212, 191, 0.17), rgba(245, 158, 114, 0.12)),
+      linear-gradient(135deg, rgba(64, 112, 192, 0.28), rgba(240, 128, 48, 0.12)),
       var(--petrol-900);
 }
 
@@ -516,14 +518,12 @@ body.platform-home a#logo {
   background: var(--accent-strong);
 }
 
-.tone-teal { border-top-color: #0f766e; }
-.tone-blue { border-top-color: #2563eb; }
-.tone-coral { border-top-color: #e85d48; }
-.tone-amber { border-top-color: #d97706; }
-.tone-violet { border-top-color: #7c3aed; }
-.tone-slate { border-top-color: #475569; }
-.tone-green { border-top-color: #15803d; }
-.tone-gray { border-top-color: #6b7280; }
+.tone-blue { border-top-color: #4070c0; }
+.tone-navy { border-top-color: #203060; }
+.tone-orange { border-top-color: #f08030; }
+.tone-lightblue { border-top-color: #90b0e0; }
+.tone-darkgray { border-top-color: #606060; }
+.tone-gray { border-top-color: #a0a0a0; }
 
 .platform-note {
   margin: 22px 0;
