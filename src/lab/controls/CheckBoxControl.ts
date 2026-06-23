@@ -63,7 +63,8 @@ constructor(label: string, getter: ()=>boolean, setter: (value: boolean)=>void,
     checkBox.type = 'checkbox';
     labelElement = document.createElement('label');
     labelElement.appendChild(checkBox);
-    labelElement.appendChild(document.createTextNode(this.label_));
+    labelElement.appendChild(document.createTextNode(
+        Util.localizeControlLabel(this.label_)));
   }
   this.checkBox_ = checkBox;
   // force passed-in checkBox to match state. This could fire an event, so

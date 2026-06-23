@@ -32,7 +32,7 @@
     </section>
     <section class="platform-stats" aria-label="totais de simulações">
       <div>
-        <strong id="platform-total">78</strong>
+        <strong id="platform-total">71</strong>
         <span>páginas publicadas</span>
       </div>
       <div>
@@ -218,20 +218,6 @@ alterar parâmetros e comparar respostas gráficas em tempo real.</p>
     sims/springs/TerminalSpringApp</a> <br>
 <a href="sims/springs/TerminalSpring2DApp-#LOCALE.html">
     sims/springs/TerminalSpring2DApp</a> <br>
-<a href="test/Engine2DTests-#LOCALE.html">
-    test/Engine2DTests</a> <br>
-<a href="test/PerformanceTests-#LOCALE.html">
-    test/PerformanceTests</a> <br>
-<a href="test/SingleTest-#LOCALE.html">
-    test/SingleTest</a> <br>
-<a href="test/SingleViewerApp-#LOCALE.html">
-    test/SingleViewerApp</a> <br>
-<a href="test/StuckTestApp-#LOCALE.html">
-    test/StuckTestApp</a> <br>
-<a href="test/TestViewerApp-#LOCALE.html">
-    test/TestViewerApp</a> <br>
-<a href="test/UnitTest-#LOCALE.html">
-    test/UnitTest</a> <br>
 </p>
 </div>
 
@@ -261,12 +247,11 @@ alterar parâmetros e comparar respostas gráficas em tempo real.</p>
       roller: 'Rolamento',
       experimental: 'Experimental',
       misc: 'Diversos',
-      pde: 'PDE',
-      test: 'Testes'
+      pde: 'PDE'
     };
     var categoryOrder = [
       'all', 'engine2D', 'pendulum', 'springs', 'roller',
-      'experimental', 'misc', 'pde', 'test'
+      'experimental', 'misc', 'pde'
     ];
     var categoryTone = {
       engine2D: 'blue',
@@ -275,8 +260,7 @@ alterar parâmetros e comparar respostas gráficas em tempo real.</p>
       roller: 'gray',
       experimental: 'lightblue',
       misc: 'darkgray',
-      pde: 'navy',
-      test: 'gray'
+      pde: 'navy'
     };
     var links = Array.prototype.slice.call(source.querySelectorAll('a'));
     var items = links.map(function(anchor) {

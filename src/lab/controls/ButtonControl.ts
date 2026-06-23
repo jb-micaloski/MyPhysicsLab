@@ -57,7 +57,7 @@ constructor(label: string, clickFunction: ()=>void, opt_image?: Node,
     button = document.createElement('button');
     button.type = 'button';
     if (opt_image === undefined) {
-      button.appendChild(document.createTextNode(label));
+      button.appendChild(document.createTextNode(Util.localizeControlLabel(label)));
     } else {
       button.className = 'icon';
       button.appendChild(opt_image);

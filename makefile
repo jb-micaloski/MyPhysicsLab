@@ -336,14 +336,7 @@ sims/springs/SingleSpring2App \
 sims/springs/SingleSpring3App \
 sims/springs/Spring2DApp \
 sims/springs/TerminalSpringApp \
-sims/springs/TerminalSpring2DApp \
-test/Engine2DTests \
-test/PerformanceTests \
-test/SingleTest \
-test/SingleViewerApp \
-test/StuckTestApp \
-test/TestViewerApp \
-test/UnitTest
+sims/springs/TerminalSpring2DApp
 
 
 bld_apps := $(addprefix $(BUILD_DIR)/,$(app_names))
@@ -495,7 +488,7 @@ all: settings apps combos
 help:
 	@echo "Available targets:"
 	@echo "all         Make all applications, tests, index files"
-	@echo "apps        Make all applications, tests"
+	@echo "apps        Make published applications"
 	@echo "apps-de     Make German versions of apps"
 	@echo "apps-en     Make English versions of apps"
 	@echo "clean       Deletes build directory"

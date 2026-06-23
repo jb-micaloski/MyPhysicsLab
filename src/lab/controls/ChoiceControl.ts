@@ -97,7 +97,7 @@ constructor(choices: string[], values: string[], getter: ()=>string,
     setter: (value: string)=>void, opt_label?: null|string) {
   this.getter_ = getter;
   this.setter_ = setter;
-  this.choices = choices;
+  this.choices = choices.map(c => Util.localizeControlLabel(c));
   this.values_ = values;
   this.currentIndex_ = this.values_.indexOf(getter());
   this.selectMenu_ = document.createElement('select');
@@ -105,7 +105,7 @@ constructor(choices: string[], values: string[], getter: ()=>string,
   // `type` is a read-only field for SelectElement
   Util.assert(this.selectMenu_.type == 'select-one');
   this.buildSelectMenu();
-  this.label_ = opt_label ?? '';
+  this.label_ = Util.localizeControlLabel(opt_label ?? '');
   /** text label to show next to the choice control, or null if no label desired.
   */
   let myLabel: HTMLLabelElement|null = null;
@@ -243,7 +243,7 @@ setChoices(choices: string[], values: string[]): void {
   if (choices.length != values.length) {
     throw '';
   }
-  this.choices = choices;
+  this.choices = choices.map(c => Util.localizeControlLabel(c));
   this.values_ = values;
   this.currentIndex_ = this.values_.indexOf(this.getter_());
   this.buildSelectMenu();

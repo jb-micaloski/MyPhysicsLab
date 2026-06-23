@@ -69,10 +69,3 @@ sims/springs/SingleSpring3App
 sims/springs/Spring2DApp
 sims/springs/TerminalSpringApp
 sims/springs/TerminalSpring2DApp
-test/Engine2DTests
-test/PerformanceTests
-test/SingleTest
-test/SingleViewerApp
-test/StuckTestApp
-test/TestViewerApp
-test/UnitTest

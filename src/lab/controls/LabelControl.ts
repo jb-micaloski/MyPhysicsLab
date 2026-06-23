@@ -29,7 +29,7 @@ export class LabelControl implements LabControl {
 constructor(text: string) {
   this.text_ = text;
   this.label_ = document.createElement('label');
-  this.label_.appendChild(document.createTextNode(text));
+  this.label_.appendChild(document.createTextNode(Util.localizeControlLabel(text)));
   // could have a special CSS class for styling.
   //this.label_.className = 'mpl_label';
 };

@@ -227,7 +227,8 @@ constructor(parameter: ParameterNumber, min: number, max: number, multiply?: boo
   this.label_ = document.createElement('div');
   this.label_.className = 'slider';
   this.label_.appendChild(document.createTextNode(
-      parameter.getName(/*localized=*/true)+parameter.getUnits()));
+      Util.localizeControlLabel(
+          parameter.getName(/*localized=*/true)+parameter.getUnits())));
   this.label_.appendChild(this.slider_);
   this.label_.appendChild(this.textField_);
   this.textField_.style.textAlign = 'right';

@@ -78,7 +78,8 @@ constructor(label: string, getter: ()=>string, setter: (value: string)=>void,
     textField.type = 'text';
     textField.size = this.columns_;
     labelElement = document.createElement('label');
-    labelElement.appendChild(document.createTextNode(this.label_));
+    labelElement.appendChild(document.createTextNode(
+        Util.localizeControlLabel(this.label_)));
     labelElement.appendChild(textField);
   }
   this.textField_ = textField;

@@ -93,6 +93,176 @@ This value is set during the `esbuild` bundling phase with a `--define` option.
 // @ts-ignore
 static LOCALE: string = MPL_LOCALE;
 
+private static readonly PT_BR_CONTROL_LABELS: {[key: string]: string} = {
+  'sim': 'simulação',
+  'graph': 'gráfico',
+  'time graph': 'gráfico temporal',
+  'multi graph': 'multigráfico',
+  'show simulation': 'mostrar simulação',
+  'show controls': 'mostrar controles',
+  'show graph': 'mostrar gráfico',
+  'show terminal': 'mostrar terminal',
+  'show forces': 'mostrar forças',
+  'show collisions': 'mostrar colisões',
+  'show energy': 'mostrar energia',
+  'show clock': 'mostrar relógio',
+  'terminal': 'terminal',
+  'controls': 'controles',
+  'command >': 'comando >',
+  'pan-zoom': 'mover/zoom',
+  'background': 'fundo',
+  'white': 'branco',
+  'black': 'preto',
+  'white with trails': 'branco com rastros',
+  'black with trails': 'preto com rastros',
+  'white with long trails': 'branco com rastros longos',
+  'black with long trails': 'preto com rastros longos',
+  'time': 'tempo',
+  'time step': 'passo de tempo',
+  'display period': 'período de exibição',
+  'time rate': 'taxa de tempo',
+  'restart': 'reiniciar',
+  'running': 'em execução',
+  'firing': 'disparo',
+  'pause': 'pausar',
+  'resume': 'retomar',
+  'non-stop': 'contínuo',
+  'step': 'passo',
+  'share': 'compartilhar',
+  'gravity': 'gravidade',
+  'zero energy level': 'nível zero de energia',
+  'damping': 'amortecimento',
+  'rotate ratio': 'razão de rotação',
+  'elasticity': 'elasticidade',
+  'mass': 'massa',
+  'length': 'comprimento',
+  'spring length': 'comprimento da mola',
+  'spring stiffness': 'rigidez da mola',
+  'spring damping': 'amortecimento da mola',
+  'sim-width': 'largura da simulação',
+  'graph-width': 'largura do gráfico',
+  'time-graph-width': 'largura do gráfico temporal',
+  'layout': 'layout',
+  'diff eq solver': 'solucionador diferencial',
+  'euler': 'Euler',
+  'runge kutta': 'Runge-Kutta',
+  'runge-kutta': 'Runge-Kutta',
+  'point mass': 'massa pontual',
+  'polygon': 'polígono',
+  'wall bottom': 'parede inferior',
+  'wall right': 'parede direita',
+  'wall left': 'parede esquerda',
+  'wall top': 'parede superior',
+  'anchor1 x': 'âncora 1 X',
+  'anchor1 y': 'âncora 1 Y',
+  'anchor2 x': 'âncora 2 X',
+  'anchor2 y': 'âncora 2 Y',
+  'chain links': 'elos da corrente',
+  'straight line': 'linha reta',
+  'attach right': 'fixar à direita',
+  'angle': 'ângulo',
+  'angular velocity': 'velocidade angular',
+  'position': 'posição',
+  'position x': 'posição X',
+  'position y': 'posição Y',
+  'velocity': 'velocidade',
+  'velocity x': 'velocidade X',
+  'velocity y': 'velocidade Y',
+  'density': 'densidade',
+  'tension': 'tensão',
+  'shape': 'forma',
+  'number of points': 'número de pontos',
+  'flat': 'plano',
+  'half sine pulse': 'pulso de meia senoide',
+  'multiple sine': 'senoide múltipla',
+  'sine pulse': 'pulso senoidal',
+  'square pulse': 'pulso quadrado',
+  'triangle': 'triângulo',
+  'triangle pulse': 'pulso triangular',
+  'repeat time': 'tempo de repetição',
+  'collision method': 'método de colisão',
+  'collision accuracy': 'precisão da colisão',
+  'distance tolerance': 'tolerância de distância',
+  'velocity tolerance': 'tolerância de velocidade',
+  'extra accel': 'aceleração extra',
+  'random seed': 'semente aleatória',
+  'simultaneous': 'simultâneo',
+  'hybrid': 'híbrido',
+  'serial grouped': 'serial agrupado',
+  'serial grouped lastpass': 'serial agrupado na última passagem',
+  'serial separate': 'serial separado',
+  'serial separate lastpass': 'serial separado na última passagem',
+  'potential energy': 'energia potencial',
+  'translational energy': 'energia translacional',
+  'kinetic energy': 'energia cinética',
+  'rotational energy': 'energia rotacional',
+  'total': 'total',
+  'total energy': 'energia total',
+  'potential energy offset': 'deslocamento da energia potencial',
+  'draw mode': 'modo de desenho',
+  'graph color': 'cor do gráfico',
+  'graph draw mode': 'modo de desenho do gráfico',
+  'graph points': 'pontos do gráfico',
+  'draw width': 'espessura do traço',
+  'x variable': 'variável X',
+  'y variable': 'variável Y',
+  'clear graph': 'limpar gráfico',
+  '-none-': '-nenhum-',
+  'aqua': 'ciano',
+  'blue': 'azul',
+  'fuchsia': 'fúcsia',
+  'gray': 'cinza',
+  'green': 'verde',
+  'lime': 'verde-limão',
+  'maroon': 'bordô',
+  'navy': 'azul-marinho',
+  'olive': 'oliva',
+  'purple': 'roxo',
+  'red': 'vermelho',
+  'silver': 'prata',
+  'teal': 'azul-petróleo',
+  'yellow': 'amarelo',
+  'rpm': 'RPM',
+  'stall torque': 'torque de estol',
+  'free speed': 'velocidade livre',
+  'slope': 'inclinação',
+  'wheel diameter': 'diâmetro da roda',
+  'engine force': 'força do motor',
+  'gravity force': 'força da gravidade',
+  'coef static friction': 'coeficiente de atrito estático',
+  'center of mass': 'centro de massa'
+};
+
+/** Translates user-facing control text for the Portuguese site shell. */
+static localizeControlLabel(label: string): string {
+  if (label.length == 0) {
+    return label;
+  }
+  if (typeof document == 'undefined'
+      || !document.documentElement.lang.toLowerCase().startsWith('pt')) {
+    return label;
+  }
+  const trimmed = label.trim();
+  const leading = label.substring(0, label.indexOf(trimmed));
+  const trailing = label.substring(label.indexOf(trimmed) + trimmed.length);
+  const lower = trimmed.toLowerCase();
+  const exact = Util.PT_BR_CONTROL_LABELS[lower];
+  if (exact !== undefined) {
+    return leading + exact + trailing;
+  }
+  const keys = Object.keys(Util.PT_BR_CONTROL_LABELS)
+      .sort((a, b) => b.length - a.length);
+  for (const key of keys) {
+    if (lower.startsWith(key)) {
+      const rest = trimmed.substring(key.length);
+      if (rest == '' || rest[0] == ' ' || rest[0] == '(' || rest[0] == '[') {
+        return leading + Util.PT_BR_CONTROL_LABELS[key] + rest + trailing;
+      }
+    }
+  }
+  return label;
+};
+
 /** Maximum number of errors to report by {@link setErrorHandler}.
 */
 private static readonly maxErrors = 3;
