@@ -119,6 +119,18 @@ select#language_menu {
   background: #ffffff;
   color: var(--ink);
 }
+#language_menu.locale_badge {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  margin: 0 0.5em 0 0;
+  padding: 0 10px;
+  border: 1px solid #5e8790;
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: bold;
+}
 a.nav_link {
   font: 100% sans-serif;
   margin: 0 0 0 0.5em;
@@ -289,10 +301,6 @@ div#copyright {
 span#revised_date {
   font-weight: normal;
   font-size: 80%;
-}
-
-a#valid_html {
-  margin: 0 0.5em;
 }
 
 /****** INDEX PLATFORM ********/

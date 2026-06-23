@@ -18,7 +18,7 @@
 
 #define #STYLE_SHEET stylesheet.css
 
-#define #MYPHYSICSLAB_URL https://www.myphysicslab.com
+#define #MYPHYSICSLAB_URL https://myphysicslabv2.vercel.app
 
 #comment  On iPhone (Safari on iOS), the "width=device-width" makes the viewport be
 #comment the width of the device, instead of the default which is 980 px. The page
@@ -30,7 +30,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">\
 <link rel="stylesheet" type="text/css" href="#TOP_DIR/#STYLE_SHEET">\
 <link rel="icon" sizes="32x32" type="image/png" href="https://www.myphysicslab.com/common/myphysicsicon.png">\
-<title>myphysicslab.#APP_PATH</title>
+<title>#APP_TITLE - MyPhysicsLab</title>
 
 #comment Internet Explorer displays webpages that contain the HTML5 document
 #comment type in standards mode.  So we don't need the X-UA-Compatible.
@@ -59,26 +59,198 @@
 </script>
 
 #define #SITE_LOGO \
-<a id="logo" href="#TOP_DIR/index-#LOCALE.html">\
+<a id="logo" href="https://myphysicslabv2.vercel.app/">\
   <img src="#IMAGES_DIR/myphysicslogo.png" width="162" height="32" alt="my physics lab logo">\
 </a>
 
+#define #LOCALIZE_PAGE \
+<script>\
+  (function localizePageShell() {\
+    document.documentElement.lang = 'pt-BR';\
+    var h1 = document.querySelector('h1');\
+    if (h1) {\
+      var raw = (h1.textContent || '').trim();\
+      var parts = raw.split(/[/.]/);\
+      var name = parts[parts.length - 1] || raw;\
+      name = name.replace(/App$/, '');\
+      name = name.replace(/([a-z])([A-Z0-9])/g, function(_, a, b) { return a + ' ' + b; });\
+      name = name.replace(/([0-9])([A-Z])/g, function(_, a, b) { return a + ' ' + b; });\
+      h1.textContent = name;\
+      document.title = name + ' - MyPhysicsLab';\
+    }\
+    var map = {\
+      'Sim': 'Simulação',\
+      'Graph': 'Gráfico',\
+      'Time Graph': 'Gráfico temporal',\
+      'Multi Graph': 'Multigráfico',\
+      'show simulation': 'mostrar simulação',\
+      'show controls': 'mostrar controles',\
+      'show graph': 'mostrar gráfico',\
+      'show terminal': 'mostrar terminal',\
+      'show forces': 'mostrar forças',\
+      'show collisions': 'mostrar colisões',\
+      'show energy': 'mostrar energia',\
+      'show clock': 'mostrar relógio',\
+      'terminal': 'terminal',\
+      'controls': 'controles',\
+      'graph': 'gráfico',\
+      'command >': 'comando >',\
+      'pan-zoom': 'mover/zoom',\
+      'background': 'fundo',\
+      'white': 'branco',\
+      'black': 'preto',\
+      'white with trails': 'branco com rastros',\
+      'black with trails': 'preto com rastros',\
+      'white with long trails': 'branco com rastros longos',\
+      'black with long trails': 'preto com rastros longos',\
+      'time': 'tempo',\
+      'gravity': 'gravidade',\
+      'zero energy level': 'nível zero de energia',\
+      'damping': 'amortecimento',\
+      'rotate ratio': 'razão de rotação',\
+      'elasticity': 'elasticidade',\
+      'mass': 'massa',\
+      'length': 'comprimento',\
+      'spring length': 'comprimento da mola',\
+      'angle': 'ângulo',\
+      'angular velocity': 'velocidade angular',\
+      'position': 'posição',\
+      'position X': 'posição X',\
+      'position Y': 'posição Y',\
+      'velocity': 'velocidade',\
+      'velocity X': 'velocidade X',\
+      'velocity Y': 'velocidade Y',\
+      'time step': 'passo de tempo',\
+      'display period': 'período de exibição',\
+      'time rate': 'taxa de tempo',\
+      'restart': 'reiniciar',\
+      'running': 'em execução',\
+      'firing': 'disparo',\
+      'pause': 'pausar',\
+      'resume': 'retomar',\
+      'non-stop': 'contínuo',\
+      'step': 'passo',\
+      'share': 'compartilhar',\
+      'spring stiffness': 'rigidez da mola',\
+      'spring damping': 'amortecimento da mola',\
+      'density': 'densidade',\
+      'tension': 'tensão',\
+      'shape': 'forma',\
+      'number of points': 'número de pontos',\
+      'repeat time': 'tempo de repetição',\
+      'collision method': 'método de colisão',\
+      'collision accuracy': 'precisão da colisão',\
+      'distance tolerance': 'tolerância de distância',\
+      'velocity tolerance': 'tolerância de velocidade',\
+      'extra accel': 'aceleração extra',\
+      'random seed': 'semente aleatória',\
+      'simultaneous': 'simultâneo',\
+      'hybrid': 'híbrido',\
+      'serial grouped': 'serial agrupado',\
+      'serial grouped lastpass': 'serial agrupado na última passagem',\
+      'serial separate': 'serial separado',\
+      'serial separate lastpass': 'serial separado na última passagem',\
+      'potential energy': 'energia potencial',\
+      'translational energy': 'energia translacional',\
+      'kinetic energy': 'energia cinética',\
+      'rotational energy': 'energia rotacional',\
+      'total': 'total',\
+      'total energy': 'energia total',\
+      'potential energy offset': 'deslocamento da energia potencial',\
+      'draw mode': 'modo de desenho',\
+      'graph color': 'cor do gráfico',\
+      'graph draw mode': 'modo de desenho do gráfico',\
+      'graph points': 'pontos do gráfico',\
+      'draw width': 'espessura do traço',\
+      'X variable': 'variável X',\
+      'Y variable': 'variável Y',\
+      'clear graph': 'limpar gráfico',\
+      '-none-': '-nenhum-',\
+      'aqua': 'ciano',\
+      'blue': 'azul',\
+      'fuchsia': 'fúcsia',\
+      'gray': 'cinza',\
+      'green': 'verde',\
+      'lime': 'verde-limão',\
+      'maroon': 'bordô',\
+      'navy': 'azul-marinho',\
+      'olive': 'oliva',\
+      'purple': 'roxo',\
+      'red': 'vermelho',\
+      'silver': 'prata',\
+      'teal': 'azul-petróleo',\
+      'yellow': 'amarelo',\
+      'RPM': 'RPM',\
+      'stall torque': 'torque de estol',\
+      'free speed': 'velocidade livre',\
+      'slope': 'inclinação',\
+      'wheel diameter': 'diâmetro da roda',\
+      'engine force': 'força do motor',\
+      'gravity force': 'força da gravidade',\
+      'coef static friction': 'coeficiente de atrito estático',\
+      'center of mass': 'centro de massa'\
+    };\
+    function translated(value) {\
+      var key = (value || '').trim();\
+      return map[key] || null;\
+    }\
+    function localizeNodeText(node) {\
+      for (var i = 0; i < node.childNodes.length; i++) {\
+        var child = node.childNodes[i];\
+        if (child.nodeType == 3) {\
+          var next = translated(child.nodeValue);\
+          if (next) {\
+            child.nodeValue = child.nodeValue.replace((child.nodeValue || '').trim(), next);\
+          }\
+        }\
+      }\
+      if (node.tagName == 'OPTION') {\
+        var optionText = translated(node.textContent);\
+        if (optionText) { node.textContent = optionText; }\
+      }\
+      if (node.tagName == 'BUTTON') {\
+        var buttonText = translated(node.textContent);\
+        if (buttonText) { node.textContent = buttonText; }\
+      }\
+    }\
+    function apply(root) {\
+      var scope = root && root.querySelectorAll ? root : document;\
+      var nodes = scope.querySelectorAll('li,label,button,option,span');\
+      for (var i = 0; i < nodes.length; i++) {\
+        localizeNodeText(nodes[i]);\
+      }\
+    }\
+    apply(document);\
+    if (window.MutationObserver) {\
+      new MutationObserver(function(mutations) {\
+        for (var i = 0; i < mutations.length; i++) {\
+          for (var j = 0; j < mutations[i].addedNodes.length; j++) {\
+            apply(mutations[i].addedNodes[j]);\
+          }\
+        }\
+      }).observe(document.documentElement, { childList: true, subtree: true });\
+    }\
+    window.setTimeout(function() { apply(document); }, 250);\
+    window.setTimeout(function() { apply(document); }, 1000);\
+  }());\
+</script>
+
 
 #define #LANGUAGE ##LOCALE#_LANGUAGE
-#define #en_LANGUAGE English
-#define #de_LANGUAGE Deutsch
+#define #en_LANGUAGE Português (Brasil)
+#define #de_LANGUAGE Português (Brasil)
 
 #define #I18N_LOCALE ##LOCALE#_LOCALE
-#define #en_LOCALE English
-#define #de_LOCALE Deutsch
+#define #en_LOCALE Português (Brasil)
+#define #de_LOCALE Português (Brasil)
 
 #define #I18N_ENGLISH ##LOCALE#_ENGLISH
-#define #en_ENGLISH English
-#define #de_ENGLISH Englisch
+#define #en_ENGLISH Português (Brasil)
+#define #de_ENGLISH Português (Brasil)
 
 #define #I18N_GERMAN ##LOCALE#_GERMAN
-#define #en_GERMAN German
-#define #de_GERMAN Deutsch
+#define #en_GERMAN Português (Brasil)
+#define #de_GERMAN Português (Brasil)
 
 #define #I18N_ENGLISH_SELECTED ##LOCALE#_ENGLISH_SELECTED
 #define #en_ENGLISH_SELECTED selected
@@ -89,19 +261,15 @@
 #define #de_GERMAN_SELECTED selected
 
 #define #I18N_NEXT ##LOCALE#_NEXT
-#define #en_NEXT next
-#define #de_NEXT n&auml;chste
+#define #en_NEXT próxima
+#define #de_NEXT próxima
 
 #define #I18N_PREVIOUS ##LOCALE#_PREVIOUS
-#define #en_PREVIOUS previous
-#define #de_PREVIOUS vorherig
+#define #en_PREVIOUS anterior
+#define #de_PREVIOUS anterior
 
 #define #LANGUAGE_MENU \
-  <select id="language_menu"\
-    onchange="location = this.options[this.selectedIndex].value;">\
-    <option value="#FILE_NAME#-en.html" #I18N_ENGLISH_SELECTED>#I18N_ENGLISH</option>\
-    <option value="#FILE_NAME#-de.html" #I18N_GERMAN_SELECTED>#I18N_GERMAN</option>\
-  </select>
+  <span id="language_menu" class="locale_badge">Português (Brasil)</span>
 
 #define #PREV_ANCHOR_TAG <a class="nav_link" \
    href="#TOP_DIR/#PREV_LINK#-#LOCALE.html">#I18N_PREVIOUS</a>
@@ -117,6 +285,7 @@
 #PREV_ANCHOR_TAG\
 #NEXT_ANCHOR_TAG\
 </div>\
+#LOCALIZE_PAGE\
 <ul id="header_bar">\
 </ul>
 
@@ -132,6 +301,9 @@
 #comment (see for example TerminalSpring2DApp).
 #defineFrom #APP_NAME {#APP_PATH} s~.*\.~~g
 
+#comment APP_TITLE is a readable title shown in page headers.
+#defineFrom #APP_TITLE {#APP_PATH} s~.*\.([^.]+?)(?:App)?$~$1~
+
 #comment when there are multiple apps on same page, then APP_NUM = 1 or 2 or 3 etc.
 #comment and in macros we refer to 'app#APP_NUM' instead of just 'app'
 #comment That translates into 'app1', 'app2', 'app3' when APP_NUM is non-empty,
@@ -144,12 +316,11 @@
 #comment #MYPHYSICSLAB_DIR https://www.myphysicslab.com
 
 #define #PAGE_INFO ##LOCALE#_PAGE_INFO
-#define #en_PAGE_INFO <p class="page_info">Use the tabs to switch between the\
-simulation and graphs. Adjust the controls to change the model in real time.</p>
+#define #en_PAGE_INFO <p class="page_info">Use as abas para alternar entre a\
+simulação e os gráficos. Ajuste os controles para modificar o modelo em tempo real.</p>
 
-#define #de_PAGE_INFO <p class="page_info">Nutzen Sie die Tabs, um zwischen\
-Simulation und Graphen zu wechseln. Mit den Steuerelementen &auml;ndern Sie\
-das Modell direkt.</p>
+#define #de_PAGE_INFO <p class="page_info">Use as abas para alternar entre a\
+simulação e os gráficos. Ajuste os controles para modificar o modelo em tempo real.</p>
 
 #define #LOAD_APP <script src="#APP_NAME#-#LOCALE.js"></script>
 
@@ -206,17 +377,14 @@ das Modell direkt.</p>
 
 #define #PAGE_FOOTER <div id="footer2" >\
   <div id="copyright">\
-    &copy; <a href="mailto:erikn\@MyPhysicsLab.com" \
-    title="copyright 2020 Erik Neumann">\
-    Erik Neumann</a> 2020, available under\
-    <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2</a>\
-    <br><span id="revised_date">revised #DATE_TIME</span>\
+    Baseado no modelo de Eric Neumann.\
+    Projeto original:\
+    <a href="https://github.com/myphysicslab/myphysicslab">GitHub myPhysicsLab</a>,\
+    myPhysicsLab by Erik Neumann.\
+    Disponível sob a\
+    <a href="https://www.apache.org/licenses/LICENSE-2.0">Licença Apache, Versão 2.0</a>.\
+    <br><span id="revised_date">revisado em #DATE_TIME</span>\
   </div>\
-  <a id="valid_html" href="https://validator.w3.org/check?uri=referer;outline=1;"\
-      title="check if this page is valid HTML">\
-  <img  src="#IMAGES_DIR/ValidHTML401.png" alt="Valid HTML 4.01" \
-      height="31" width="88">\
-  </a>\
 </div>
 
 #comment "Lorem ipsum" text is used to test scrolling of the web page.

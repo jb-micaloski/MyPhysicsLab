@@ -4,8 +4,9 @@
 #define #TOP_DIR .
 #define #APP_PATH index
 #include "macros.html"
+#define #APP_TITLE Simulações MyPhysicsLab
 #DOC_TYPE
-<html lang="en">
+<html lang="pt-BR">
 <head>
 #META_TAGS
 </head>
@@ -13,7 +14,7 @@
 <main class="platform-shell">
 <header class="platform-hero">
   <nav class="platform-topbar">
-    <a id="logo" href="#MYPHYSICSLAB_URL/index-#LOCALE.html">
+    <a id="logo" href="https://myphysicslabv2.vercel.app/">
       <img src="#IMAGES_DIR/myphysicslogo.png" width="162" height="32"
           alt="myPhysicsLab">
     </a>
@@ -24,23 +25,23 @@
 
   <div class="platform-hero-grid">
     <section class="platform-title-block">
-      <p class="platform-kicker">Interactive mechanics library</p>
-      <h1>MyPhysicsLab simulations</h1>
-      <p class="platform-lede">Browse the published examples by physics family,
-      open a model, and start experimenting directly in the browser.</p>
+      <p class="platform-kicker">Biblioteca interativa de mecÃ¢nica</p>
+      <h1>SimulaÃ§Ãµes MyPhysicsLab</h1>
+      <p class="platform-lede">Explore os exemplos publicados por famÃ­lia fÃ­sica,
+      abra um modelo e experimente diretamente no navegador.</p>
     </section>
-    <section class="platform-stats" aria-label="simulation totals">
+    <section class="platform-stats" aria-label="totais de simulaÃ§Ãµes">
       <div>
         <strong id="platform-total">78</strong>
-        <span>published pages</span>
+        <span>pÃ¡ginas publicadas</span>
       </div>
       <div>
         <strong>7</strong>
-        <span>families</span>
+        <span>famÃ­lias</span>
       </div>
       <div>
         <strong>Live</strong>
-        <span>Vercel build</span>
+        <span>build na Vercel</span>
       </div>
     </section>
   </div>
@@ -49,24 +50,20 @@
 <ul id="header_bar">
 </ul>
 
-#define en_INDEX_INTRO <p>Here are links to example files for software development and \
-testing.  Please see \
-<a href="#MYPHYSICSLAB_URL/index-#LOCALE.html">myPhysicsLab website</a> \
-for finished versions of these simulations.</p>
+#define en_INDEX_INTRO <p>Escolha uma simulação para investigar o modelo físico, \
+alterar parâmetros e comparar respostas gráficas em tempo real.</p>
 
-#define de_INDEX_INTRO <p>Hier sind Links zu Exemplare Files für Softwareentwicklung \
-und Prüfung, alphabetisch sortiert. Bitte nützen Sie \
-<a href="#MYPHYSICSLAB_URL/index-#LOCALE.html">myPhysicsLab website</a> \
-für Fertigprodukt diese Simulationen.</p>
+#define de_INDEX_INTRO <p>Escolha uma simulação para investigar o modelo físico, \
+alterar parâmetros e comparar respostas gráficas em tempo real.</p>
 
-<section class="platform-controls" aria-label="simulation browser">
+<section class="platform-controls" aria-label="navegador de simulações">
   <label class="platform-search">
-    <span>Search</span>
+    <span>Buscar</span>
     <input id="simulation-search" type="search" autocomplete="off"
-        placeholder="pendulum, spring, engine...">
+        placeholder="pêndulo, mola, motor...">
   </label>
   <div id="category-filters" class="category-filters"
-      aria-label="simulation categories"></div>
+      aria-label="categorias de simulação"></div>
 </section>
 
 <section id="simulation-platform" class="simulation-platform"
@@ -258,14 +255,14 @@ für Fertigprodukt diese Simulationen.</p>
       return;
     }
     var categoryNames = {
-      engine2D: 'Engine 2D',
-      pendulum: 'Pendulums',
-      springs: 'Springs',
-      roller: 'Roller',
+      engine2D: 'Dinâmica 2D',
+      pendulum: 'Pêndulos',
+      springs: 'Molas',
+      roller: 'Rolamento',
       experimental: 'Experimental',
-      misc: 'Misc',
+      misc: 'Diversos',
       pde: 'PDE',
-      test: 'Tests'
+      test: 'Testes'
     };
     var categoryOrder = [
       'all', 'engine2D', 'pendulum', 'springs', 'roller',
@@ -316,7 +313,7 @@ für Fertigprodukt diese Simulationen.</p>
         button.className = 'category-filter';
         button.setAttribute('data-category', category);
         button.setAttribute('aria-pressed', category == activeCategory ? 'true' : 'false');
-        button.textContent = (category == 'all' ? 'All' :
+        button.textContent = (category == 'all' ? 'Todas' :
             categoryNames[category] || category) + ' ' + count;
         button.onclick = function() {
           activeCategory = category;
@@ -334,7 +331,7 @@ für Fertigprodukt diese Simulationen.</p>
         '<span class="card-family">' + (categoryNames[item.category] || item.category) +
         '</span><strong>' + item.label +
         '</strong><a class="card-open" href="' + item.href +
-        '">Open simulation</a>';
+        '">Abrir simulação</a>';
       return card;
     }
 
@@ -375,7 +372,7 @@ für Fertigprodukt diese Simulationen.</p>
       if (!visible.length) {
         var empty = document.createElement('p');
         empty.className = 'platform-empty';
-        empty.textContent = 'No matching simulations.';
+        empty.textContent = 'Nenhuma simulação encontrada.';
         target.appendChild(empty);
       }
       renderFilters();
