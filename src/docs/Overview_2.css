@@ -1,0 +1,97 @@
+/* originally adapted from dossier.css (12-14-23 should be simplified further).
+with following modifications from dossier.ss:
+  body: margin, background, max-width.
+  code: font-size
+  img {
+    max-width: 100%;
+    display: block;
+  }
+The img tag solves some Google "mobile-friendly"  tests. It ensures images are not wider
+than then screen,and therefore  prevents the entire page from being  shrunk to fit. That
+shrinking causes errors like "Text too small  to read" and "Clickable elements too close
+together"
+@import url(https://fonts.googleapis.com/css?family=Lato:400, 700, 400italic, 700italic|Inconsolata);
+*/
+* {
+    margin: 0;
+    padding: 0;
+}
+html {
+    font-size: 10px;
+    min-height: 100%;
+    position: relative;
+}
+body {
+    color: #333;
+    font-family: "Lato", sans-serif;
+    line-height: 1.6;
+    word-wrap: break-word;
+    margin: 0 1.5em;
+    padding: 0;
+    background: #fff;
+    font-size: 1.4rem;
+    max-width: 50em;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+a, a:visited {
+    color: #66f;
+    text-decoration: none;
+}
+a[href]:hover {
+    text-decoration: underline;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 1.5rem 0;
+}
+h2, h3 {
+    border-bottom: 1px solid #8f8f8f;
+}
+h1 {
+    font-size: 2.5rem;
+    border-bottom: 5px double #8f8f8f;
+}
+h2 {
+    font-size: 2.0rem;
+}
+h3 {
+    font-size: 1.8rem;
+    border: 0;
+}
+h3 code {
+    font-size: 75%;
+    }
+code {
+    font-size: 1.2rem;
+}
+pre {
+    background: #f8f8f8;
+    border-radius: 3px;
+    border-left: .2rem solid #d2d2d2;
+    line-height: 1.45;
+    word-wrap: normal;
+    margin: 1rem 3rem;
+    padding: 1rem;
+    overflow: auto;
+}
+p {
+    margin: 0 0 1rem 0;
+}
+p code, li code {
+    background: #f8f8f8;
+    padding: 2px;
+    border-radius: 3px;
+    border: 1px solid #d2d2d2;
+}
+pre code {
+    border: 0;
+}
+ol, ul {
+    margin: 1rem 0 1rem 4rem;
+}
+blockquote {
+    margin: 1rem 3rem;
+}

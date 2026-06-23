@@ -1,0 +1,12 @@
+{
+  "name": "myphysicslabclone-q0",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc && make LOCALE=en apps-en && cp build/index-en.html build/index.html"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "typescript": "5.9.3"
+  }
+}
