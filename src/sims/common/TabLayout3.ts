@@ -493,6 +493,22 @@ private configurePopoutMode(): void {
   this.div_contain.classList.add('simulation_popout_container');
   this.mobileControlsButton?.remove();
   this.setLayout(view);
+  this.resumePopoutPlayback();
+};
+
+private resumePopoutPlayback(attempt = 0): void {
+  window.setTimeout(() => {
+    const images = Array.from(this.div_sim_controls.querySelectorAll(
+        'button.icon img')) as HTMLImageElement[];
+    const playImage = images.find(img => img.src.indexOf('forward.png') > -1
+        && img.style.display != 'none');
+    const button = playImage?.closest('button') as HTMLButtonElement|null;
+    if (button != null) {
+      button.click();
+    } else if (attempt < 20) {
+      this.resumePopoutPlayback(attempt + 1);
+    }
+  }, 150);
 };
 
 private toggleControlsDrawer(force?: boolean): void {
