@@ -16,6 +16,7 @@ import { DisplayAxes } from '../../lab/graph/DisplayAxes.js'
 import { DisplayGraph } from '../../lab/graph/DisplayGraph.js'
 import { DoubleRect } from '../../lab/util/DoubleRect.js'
 import { GenericObserver, SubjectEvent } from '../../lab/util/Observe.js'
+import { GraphExport } from '../common/GraphExport.js';
 import { GraphLine, GraphPoint, GraphStyle } from '../../lab/graph/GraphLine.js'
 import { HorizAlign } from '../../lab/view/HorizAlign.js'
 import { LabCanvas } from '../../lab/view/LabCanvas.js'
@@ -126,6 +127,10 @@ constructor(elem_ids: ElementIDs) {
       this.graph.reset();
       this.simCanvas.paint();
     });
+  const download = GraphExport.makeDownloadButton(this.simCanvas, [this.graphLine]);
+  const downloadElement = download.getElement();
+  downloadElement.style.display = 'block';
+  div.appendChild(downloadElement);
 };
 
 /**

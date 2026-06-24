@@ -88,11 +88,14 @@ ul#header_bar, ul.horiz_tabs {
 ul.horiz_tabs {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   padding: 10px;
   border: 1px solid rgba(217, 237, 240, 0.18);
   border-radius: 8px;
-  background: var(--petrol-800);
+  background: linear-gradient(180deg, var(--petrol-800), var(--petrol-900));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 24px rgba(6, 25, 31, 0.14);
 }
 ul#header_bar li {
   list-style: none;
@@ -107,15 +110,26 @@ ul.horiz_tabs li {
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--petrol-100);
+  cursor: pointer;
   text-decoration: none;
   font: bold 12px Verdana, sans-serif;
   white-space: nowrap;
   box-sizing: border-box;
+  transition: background-color 140ms ease, border-color 140ms ease,
+      color 140ms ease, transform 140ms ease;
 }
 ul.horiz_tabs li.selected {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
   color: #ffffff;
-  border-color: var(--accent);
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 5px 14px rgba(6, 25, 31, 0.24);
+}
+ul.horiz_tabs li:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+ul.horiz_tabs li:active {
+  transform: translateY(1px);
 }
 /* this div contains language_menu and next/prev nav_links */
 div#header_nav {
@@ -171,6 +185,12 @@ canvas {
     background: #ffffff;
     box-shadow: 0 10px 28px rgba(6, 25, 31, 0.18);
     outline: none; /* turns off outline drawn when selecting with mouse */
+    display: block;
+    max-width: 100%;
+    height: auto;
+    contain: layout paint;
+    image-rendering: auto;
+    touch-action: none;
     width: 100%;
     /*-webkit-tap-highlight-color: rgba(255, 255, 255, 0);*/
 }
@@ -208,6 +228,7 @@ div.control_container {
   box-shadow: 0 12px 30px rgba(6, 25, 31, 0.12);
   box-sizing: border-box;
   overflow-x: auto;
+  scrollbar-gutter: stable;
 }
 @media (prefers-color-scheme: dark) {
   div.control_container {
@@ -229,6 +250,7 @@ div.control_group {
   border: 1px solid #d2e1e5;
   box-sizing: border-box;
   overflow-x: auto;
+  scrollbar-gutter: stable;
 }
 @media (prefers-color-scheme: dark) {
   div.control_group {
@@ -257,13 +279,19 @@ label, div.slider {
     color: #e7f3f5;
   }
 }
-div.control_container input, div.control_container select {
+div.control_container input,
+div.control_container select,
+div.control_group input,
+div.control_group select {
   margin-left: 0.7em; margin-right: 0.3em;
   accent-color: var(--accent-strong);
 }
 div.control_container input[type='text'],
 div.control_container input[type='number'],
 div.control_container select,
+div.control_group input[type='text'],
+div.control_group input[type='number'],
+div.control_group select,
 textarea {
   min-height: 30px;
   border: 1px solid #9eb8bf;
@@ -276,6 +304,9 @@ textarea {
   div.control_container input[type='text'],
   div.control_container input[type='number'],
   div.control_container select,
+  div.control_group input[type='text'],
+  div.control_group input[type='number'],
+  div.control_group select,
   textarea {
     border-color: #5e8790;
     background: #0b2530;
@@ -283,7 +314,8 @@ textarea {
   }
 }
 /* align slider controls, fixes Firefox layout */
-div.control_container input[type='range'] {
+div.control_container input[type='range'],
+div.control_group input[type='range'] {
   vertical-align: bottom;
   max-width: 100%;
 }
@@ -312,6 +344,41 @@ div.control_group button {
   color: var(--ink);
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease,
+      box-shadow 140ms ease, transform 140ms ease;
+}
+div.control_container button:hover,
+div.control_group button:hover,
+button.icon:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(6, 25, 31, 0.12);
+}
+div.control_container button:active,
+div.control_group button:active {
+  transform: translateY(1px);
+}
+button.graph-download {
+  display: flex !important;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 0 13px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(16, 32, 64, 0.22);
+}
+button.graph-download:hover {
+  background: linear-gradient(180deg, #5f98cf, var(--accent-strong));
+  color: #ffffff;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+ul.horiz_tabs li:focus-visible {
+  outline: 3px solid rgba(240, 128, 48, 0.5);
+  outline-offset: 2px;
 }
 @media (prefers-color-scheme: dark) {
   div.control_container button,
@@ -319,6 +386,14 @@ div.control_group button {
     border-color: #5e8790;
     background: #123847;
     color: #e7f3f5;
+  }
+  button.graph-download {
+    border-color: rgba(217, 237, 240, 0.3);
+    background: linear-gradient(180deg, #4f8fb0, #123847);
+    color: #ffffff;
+  }
+  button.graph-download:hover {
+    background: linear-gradient(180deg, #70a8c4, #1d5368);
   }
 }
 button.icon:active {
@@ -740,12 +815,14 @@ body.platform-home a#logo {
     overflow-x: auto;
     padding: 8px;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
   }
   ul.horiz_tabs li {
     flex: 0 0 auto;
     min-height: 42px;
     padding: 10px 12px;
     font-size: 13px;
+    scroll-snap-align: start;
   }
   div.control_container,
   div.control_group {
@@ -810,6 +887,10 @@ body.platform-home a#logo {
     margin: 2px;
     padding: 7px;
     font-size: 15px;
+  }
+  button.graph-download {
+    width: 100%;
+    margin: 8px 0 4px 0;
   }
   button.icon img {
     width: 34px;

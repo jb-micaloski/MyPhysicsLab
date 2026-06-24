@@ -26,6 +26,7 @@ import { GenericEvent, GenericObserver, ParameterBoolean, ParameterNumber,
     from '../../lab/util/Observe.js';
 import { GenericMemo } from '../../lab/util/Memo.js';
 import { Graph } from './Graph.js';
+import { GraphExport } from './GraphExport.js';
 import { GraphLine } from '../../lab/graph/GraphLine.js';
 import { HorizAlign } from '../../lab/view/HorizAlign.js';
 import { LabCanvas } from '../../lab/view/LabCanvas.js';
@@ -137,6 +138,8 @@ constructor(varsList: VarsList, graphCanvas: LabCanvas, div_controls: HTMLDivEle
       }
     );
   this.addControl(bc);
+  this.addControl(GraphExport.makeDownloadButton(this.canvas,
+      [this.line1, this.line2, this.line3]));
 
   /* GenericObserver ensures line2, line3 have same X variable as line1. */
   this.line1Obs = new GenericObserver(this.line1, 

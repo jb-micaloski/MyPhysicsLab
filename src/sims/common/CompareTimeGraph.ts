@@ -23,6 +23,7 @@ import { DisplayGraph } from '../../lab/graph/DisplayGraph.js';
 import { DoubleRect } from '../../lab/util/DoubleRect.js';
 import { DrawingMode } from '../../lab/view/DrawingMode.js';
 import { GenericObserver } from '../../lab/util/Observe.js';
+import { GraphExport } from './GraphExport.js';
 import { GraphLine } from '../../lab/graph/GraphLine.js';
 import { HorizAlign } from '../../lab/view/HorizAlign.js';
 import { LabCanvas } from '../../lab/view/LabCanvas.js';
@@ -131,6 +132,7 @@ constructor(line1: GraphLine, line2: GraphLine, graphCanvas: LabCanvas, div_cont
         this.autoScale.reset();
       });
   this.addControl(bc);
+  this.addControl(GraphExport.makeDownloadButton(this.canvas, [line1, line2]));
 
   const ps = line1.getParameterString(GraphLine.en.DRAWING_MODE);
   this.addControl(new ChoiceControl(ps));

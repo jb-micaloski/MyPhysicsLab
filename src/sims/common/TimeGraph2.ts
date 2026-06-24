@@ -24,6 +24,7 @@ import { DoubleRect } from '../../lab/util/DoubleRect.js';
 import { GenericEvent, GenericObserver, ParameterBoolean, ParameterNumber,
 ParameterString, Subject, SubjectEvent, SubjectList } from '../../lab/util/Observe.js';
 import { Graph } from './Graph.js';
+import { GraphExport } from './GraphExport.js';
 import { GraphLine } from '../../lab/graph/GraphLine.js';
 import { HorizAlign } from '../../lab/view/HorizAlign.js';
 import { LabCanvas } from '../../lab/view/LabCanvas.js';
@@ -174,6 +175,8 @@ constructor(varsList: VarsList, graphCanvas: LabCanvas, div_controls: HTMLDivEle
         this.line2.reset();
       });
   this.addControl(bc);
+  this.addControl(GraphExport.makeDownloadButton(this.canvas,
+      [this.line1, this.line2]));
   /* GenericObserver ensures autoScale2 has same time window as autoScale1 */
   this.auto1Obs = new GenericObserver(this.autoScale1,
       _evt => this.autoScale2.setTimeWindow(this.autoScale1.getTimeWindow()),

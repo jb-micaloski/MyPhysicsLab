@@ -18,6 +18,7 @@ import { DisplayGraph } from '../../lab/graph/DisplayGraph.js';
 import { DoubleRect } from '../../lab/util/DoubleRect.js';
 import { EasyScriptParser } from '../../lab/util/EasyScriptParser.js';
 import { GenericObserver, ParameterNumber, SubjectEvent, Subject } from '../../lab/util/Observe.js'
+import { GraphExport } from '../common/GraphExport.js';
 import { GraphLine, GraphPoint, GraphStyle } from '../../lab/graph/GraphLine.js'
 import { HorizAlign } from '../../lab/view/HorizAlign.js';
 import { LabCanvas } from '../../lab/view/LabCanvas.js';
@@ -164,6 +165,7 @@ constructor(elem_ids: ElementIDs, opt_name?: string) {
   const b_increments = typeof elem_ids.b_increments === 'number' ? elem_ids.b_increments : 200;
   this.addControl(new SliderControl(pn, b_min, b_max, /*multiply=*/b_multiply,
       /*increments=*/b_increments));
+  this.addControl(GraphExport.makeDownloadButton(this.simCanvas, [this.graphLine]));
 
   this.easyScript = new EasyScriptParser([ this, this.simCanvas ]);
   this.terminal.setParser(this.easyScript);

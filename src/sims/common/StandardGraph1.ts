@@ -27,6 +27,7 @@ import { GenericEvent, GenericObserver, ParameterBoolean, ParameterNumber,
     from '../../lab/util/Observe.js';
 import { GenericMemo } from '../../lab/util/Memo.js';
 import { Graph } from './Graph.js';
+import { GraphExport } from './GraphExport.js';
 import { GraphColorChoices, GraphColorValues } from '../../lab/graph/GraphColor.js';
 import { GraphLine } from '../../lab/graph/GraphLine.js';
 import { HorizAlign } from '../../lab/view/HorizAlign.js';
@@ -123,6 +124,7 @@ constructor(varsList: VarsList, graphCanvas: LabCanvas, div_controls: HTMLDivEle
   this.addControl(new ChoiceControl(pn, 'X:'));
   this.addControl(new ButtonControl(GraphLine.i18n.CLEAR_GRAPH,
       () => this.line.reset() ));
+  this.addControl(GraphExport.makeDownloadButton(this.canvas, [this.line]));
 
   let ps = this.line.getParameterString(GraphLine.en.GRAPH_COLOR);
   this.addControl(new ChoiceControl(ps, /*label=*/undefined, GraphColorChoices(),
