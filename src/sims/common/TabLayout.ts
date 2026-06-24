@@ -273,7 +273,7 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   this.simCanvas = new LabCanvas(canvas, 'SIM_CANVAS');
   this.simCanvas.setSize(canvasWidth, canvasHeight);
   this.div_sim.appendChild(this.simCanvas.getCanvas());
-  this.addPopoutButton(this.div_sim, this.simCanvas,
+  this.addPopoutButton(this.div_sim, LayoutOptions.SIM,
       Util.localizeControlLabel('simulation'));
 
   // the 'show sim' checkbox.  The default 'checked' property is determined by the
@@ -296,7 +296,7 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   canvasWidth = Math.max(canvasWidth, canvasHeight);
   this.graphCanvas.setSize(canvasWidth, canvasWidth);
   this.div_graph.appendChild(canvas2);
-  this.addPopoutButton(this.div_graph, this.graphCanvas,
+  this.addPopoutButton(this.div_graph, LayoutOptions.GRAPH,
       Util.localizeControlLabel('graph'));
 
   this.div_graph_controls =
@@ -341,7 +341,7 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   this.timeGraphCanvas = new LabCanvas(canvas3, 'TIME_GRAPH_CANVAS');
   this.timeGraphCanvas.setSize(canvasWidth, canvasWidth);
   this.div_time_graph.appendChild(canvas3);
-  this.addPopoutButton(this.div_time_graph, this.timeGraphCanvas,
+  this.addPopoutButton(this.div_time_graph, LayoutOptions.TIME_GRAPH,
       Util.localizeControlLabel('time graph'));
 
   this.div_time_graph_controls =
@@ -370,6 +370,7 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
         () => this.show_term_cb != null ? this.show_term_cb.checked : false,
         a => this.showTerminal(a) ));
   }
+  this.configurePopoutMode();
 };
 
 /** @inheritDoc */
@@ -430,49 +431,36 @@ private addMobileControlsButton(): void {
   this.mobileControlsButton = button;
 };
 
-private addPopoutButton(viewDiv: HTMLDivElement, labCanvas: LabCanvas,
+private addPopoutButton(viewDiv: HTMLDivElement, view: LayoutOptions,
     title: string): void {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'popout_canvas';
   button.textContent = 'destacar';
   button.title = 'Destacar em outra janela';
-  button.addEventListener('click', () => this.openCanvasWindow(labCanvas, title));
+  button.setAttribute('aria-label', 'Destacar '+title);
+  button.addEventListener('click', () => this.openCanvasWindow(view));
   viewDiv.appendChild(button);
 };
 
-private openCanvasWindow(labCanvas: LabCanvas, title: string): void {
-  const out = window.open('', '_blank', 'width=900,height=700');
-  if (out == null) {
+private openCanvasWindow(view: LayoutOptions): void {
+  const url = new URL(window.location.href);
+  url.searchParams.set('popout_view', view);
+  url.hash = '';
+  window.open(url.toString(), '_blank', 'width=960,height=760');
+};
+
+private configurePopoutMode(): void {
+  const view = new URLSearchParams(window.location.search).get('popout_view');
+  if (view != LayoutOptions.SIM && view != LayoutOptions.GRAPH
+      && view != LayoutOptions.TIME_GRAPH) {
     return;
   }
-  out.document.title = title;
-  out.document.body.innerHTML = '';
-  const style = out.document.createElement('style');
-  style.textContent = 'html,body{margin:0;width:100%;height:100%;background:#071820;color:#e7f3f5;font-family:Arial,sans-serif;overflow:hidden}header{height:42px;display:flex;align-items:center;padding:0 14px;background:#0b2530;font-weight:bold}canvas{display:block;width:100vw;height:calc(100vh - 42px);background:#ffffff}';
-  out.document.head.appendChild(style);
-  const header = out.document.createElement('header');
-  header.textContent = title;
-  const canvas = out.document.createElement('canvas');
-  out.document.body.appendChild(header);
-  out.document.body.appendChild(canvas);
-  const draw = () => {
-    if (out.closed) {
-      return;
-    }
-    const source = labCanvas.getCanvas();
-    if (canvas.width != source.width || canvas.height != source.height) {
-      canvas.width = source.width;
-      canvas.height = source.height;
-    }
-    const context = canvas.getContext('2d');
-    if (context != null) {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(source, 0, 0);
-    }
-    out.requestAnimationFrame(draw);
-  };
-  draw();
+  document.body.classList.add('simulation_popout_mode',
+      'simulation_popout_'+view);
+  this.div_contain.classList.add('simulation_popout_container');
+  this.mobileControlsButton?.remove();
+  this.setLayout(view);
 };
 
 private toggleControlsDrawer(force?: boolean): void {

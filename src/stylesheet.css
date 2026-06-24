@@ -313,6 +313,86 @@ div.control_group {
   .view_container .control_group {
     margin-left: 12px;
   }
+  .view_container .control_group label.numeric_control,
+  .control_container .control_group label.numeric_control,
+  .control_container label.numeric_control {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    width: 100%;
+    align-items: stretch;
+  }
+  .view_container .control_group label.numeric_control input,
+  .control_container .control_group label.numeric_control input,
+  .control_container label.numeric_control input {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .view_container .control_group label.numeric_control input[type='range'],
+  .control_container .control_group label.numeric_control input[type='range'],
+  .control_container label.numeric_control input[type='range'] {
+    min-height: 32px;
+  }
+}
+body.simulation_popout_mode {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #071820;
+}
+body.simulation_popout_mode h1,
+body.simulation_popout_mode nav,
+body.simulation_popout_mode footer,
+body.simulation_popout_mode ul.horiz_tabs,
+body.simulation_popout_mode p,
+body.simulation_popout_mode .control_group,
+body.simulation_popout_mode .mobile-controls-toggle,
+body.simulation_popout_mode .popout_canvas,
+body.simulation_popout_mode #logo,
+body.simulation_popout_mode #header,
+body.simulation_popout_mode #header_bar {
+  display: none !important;
+}
+body.simulation_popout_mode .control_container,
+body.simulation_popout_mode .view_container {
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #071820 !important;
+  overflow: hidden !important;
+}
+body.simulation_popout_mode div[id^='sim_applet'],
+body.simulation_popout_mode div[id^='div_graph'],
+body.simulation_popout_mode div[id^='div_time_graph'] {
+  display: none !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  align-items: center;
+  justify-content: center;
+}
+body.simulation_popout_sim div[id^='sim_applet'],
+body.simulation_popout_graph div[id^='div_graph'],
+body.simulation_popout_time_graph div[id^='div_time_graph'] {
+  display: flex !important;
+}
+body.simulation_popout_mode canvas {
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
 }
 @media (prefers-color-scheme: dark) {
   div.control_group {
