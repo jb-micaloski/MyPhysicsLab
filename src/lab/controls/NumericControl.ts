@@ -381,6 +381,12 @@ Util.defineGlobal('lab$controls$NumericControlBase', NumericControlBase);
 */
 export class NumericControl extends NumericControlBase {
   private parameter_: ParameterNumber;
+  private slider_: HTMLInputElement|null = null;
+  private sliderMin_: number = 0;
+  private sliderMax_: number = 1;
+  private autoMin_: boolean = false;
+  private autoMax_: boolean = false;
+  private changeSliderFn_: (e:Event)=>void;
 
 /**
 * @param parameter the ParameterNumber to display and edit
@@ -391,8 +397,10 @@ constructor(parameter: ParameterNumber, textField?: HTMLInputElement) {
   super(parameter.getName(/*localized=*/true)+parameter.getUnits(),
       () => parameter.getValue(), a => parameter.setValue(a), textField);
   this.parameter_ = parameter;
+  this.changeSliderFn_ = this.changeSlider.bind(this);
   this.setSignifDigits(parameter.getSignifDigits());
   this.setDecimalPlaces(parameter.getDecimalPlaces());
+  this.addSlider();
   this.parameter_.getSubject().addObserver(this);
 };
 
@@ -406,6 +414,12 @@ override toString() {
 override disconnect(): void {
   super.disconnect();
   this.parameter_.getSubject().removeObserver(this);
+  if (this.slider_ != null) {
+    this.slider_.removeEventListener('input', this.changeSliderFn_,
+        /*capture=*/true);
+    this.slider_.removeEventListener('change', this.changeSliderFn_,
+        /*capture=*/true);
+  }
 };
 
 /** @inheritDoc */
@@ -424,6 +438,127 @@ override observe(event: SubjectEvent): void {
     super.observe(event);
     this.setSignifDigits(this.parameter_.getSignifDigits());
     this.setDecimalPlaces(this.parameter_.getDecimalPlaces());
+    this.syncSliderToValue();
+  }
+};
+
+/** @inheritDoc */
+override setEnabled(enabled: boolean): void {
+  super.setEnabled(enabled);
+  if (this.slider_ != null) {
+    this.slider_.disabled = !enabled;
+  }
+};
+
+/** @inheritDoc */
+override setValue(value: number): void {
+  super.setValue(value);
+  this.syncSliderToValue();
+};
+
+private addSlider(): void {
+  if (this.parameter_.isComputed() || this.parameter_.getChoices().length > 0) {
+    return;
+  }
+  const value = this.parameter_.getValue();
+  if (!Number.isFinite(value)) {
+    return;
+  }
+  const element = super.getElement();
+  element.classList.add('numeric_control');
+  this.makeSliderRange(value);
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  if (slider.type == 'text') {
+    return;
+  }
+  this.slider_ = slider;
+  slider.className = 'numeric_slider';
+  slider.setAttribute('aria-label', Util.localizeControlLabel(
+      this.parameter_.getName(/*localized=*/true)+this.parameter_.getUnits()));
+  this.applySliderRange();
+  slider.value = String(this.clamp(value));
+  slider.addEventListener('input', this.changeSliderFn_, /*capture=*/true);
+  slider.addEventListener('change', this.changeSliderFn_, /*capture=*/true);
+  element.appendChild(slider);
+};
+
+private applySliderRange(): void {
+  if (this.slider_ == null) {
+    return;
+  }
+  this.slider_.min = String(this.sliderMin_);
+  this.slider_.max = String(this.sliderMax_);
+  this.slider_.step = String(this.sliderStep());
+};
+
+private changeSlider(_event: Event): void {
+  if (this.slider_ == null) {
+    return;
+  }
+  const value = Number(this.slider_.value);
+  if (Number.isFinite(value)) {
+    super.setValue(value);
+    this.syncSliderToValue();
+  }
+};
+
+private clamp(value: number): number {
+  return Math.max(this.sliderMin_, Math.min(this.sliderMax_, value));
+};
+
+private makeSliderRange(value: number): void {
+  const lower = this.parameter_.getLowerLimit();
+  const upper = this.parameter_.getUpperLimit();
+  this.autoMin_ = !Number.isFinite(lower);
+  this.autoMax_ = !Number.isFinite(upper);
+  const magnitude = Math.max(Math.abs(value), 1);
+  this.sliderMin_ = this.autoMin_ ? value - 2*magnitude : lower;
+  this.sliderMax_ = this.autoMax_ ? value + 2*magnitude : upper;
+  if (Number.isFinite(lower)) {
+    this.sliderMin_ = Math.min(this.sliderMin_, value);
+  }
+  if (Number.isFinite(upper)) {
+    this.sliderMax_ = Math.max(this.sliderMax_, value);
+  }
+  if (this.sliderMin_ >= this.sliderMax_) {
+    this.sliderMax_ = this.sliderMin_ + magnitude;
+  }
+};
+
+private syncSliderToValue(): void {
+  if (this.slider_ == null) {
+    return;
+  }
+  const value = this.parameter_.getValue();
+  if (!Number.isFinite(value)) {
+    return;
+  }
+  this.updateAutoRange(value);
+  this.slider_.value = String(this.clamp(value));
+};
+
+private sliderStep(): number {
+  const range = this.sliderMax_ - this.sliderMin_;
+  if (this.parameter_.getDecimalPlaces() == 0) {
+    return Math.max(1, Math.round(range / 1000));
+  }
+  return range / 1000;
+};
+
+private updateAutoRange(value: number): void {
+  let changed = false;
+  const range = this.sliderMax_ - this.sliderMin_;
+  if (this.autoMin_ && value <= this.sliderMin_ + 0.05*range) {
+    this.sliderMin_ = value - Math.max(range, Math.abs(value), 1);
+    changed = true;
+  }
+  if (this.autoMax_ && value >= this.sliderMax_ - 0.05*range) {
+    this.sliderMax_ = value + Math.max(range, Math.abs(value), 1);
+    changed = true;
+  }
+  if (changed) {
+    this.applySliderRange();
   }
 };
 

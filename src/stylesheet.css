@@ -28,6 +28,14 @@ html {
   --petrol-100: #e0e0f0;
   --surface: #f3f4f7;
   --surface-strong: #ffffff;
+  --panel-bg: rgba(239, 248, 249, 0.96);
+  --panel-bg-strong: #e3f0f3;
+  --control-row: #f9fcfd;
+  --control-row-hover: #edf6f8;
+  --control-border: #b7cfd6;
+  --field-bg: #ffffff;
+  --range-track: #c2d9de;
+  --range-thumb: #f08030;
   --line: #c0c0c0;
   --accent: #4070c0;
   --accent-strong: #203060;
@@ -47,6 +55,14 @@ html {
     --petrol-100: #d9edf0;
     --surface: #0b2530;
     --surface-strong: #123341;
+    --panel-bg: rgba(14, 43, 55, 0.96);
+    --panel-bg-strong: #123847;
+    --control-row: rgba(18, 56, 71, 0.82);
+    --control-row-hover: rgba(29, 83, 104, 0.9);
+    --control-border: #406d7d;
+    --field-bg: #071820;
+    --range-track: #315767;
+    --range-thumb: #f5a45d;
     --line: #315767;
     --accent: #70a8c4;
     --accent-strong: #93c6d8;
@@ -222,10 +238,10 @@ div.control_container {
   clear: both; /* otherwise floating nav-links above are covered up, can't click */
   width: 100%;
   padding: 12px;
-  border: 1px solid #cad9dd;
+  border: 1px solid var(--control-border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 12px 30px rgba(6, 25, 31, 0.12);
+  background: linear-gradient(180deg, var(--panel-bg), var(--panel-bg-strong));
+  box-shadow: 0 14px 32px rgba(6, 25, 31, 0.14);
   box-sizing: border-box;
   overflow-x: auto;
   scrollbar-gutter: stable;
@@ -244,10 +260,11 @@ div.control_container p {
 div.control_group {
   vertical-align: top;
   margin-top: 10px;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
-  background: #eef5f6;
-  border: 1px solid #d2e1e5;
+  background: linear-gradient(180deg, var(--panel-bg), var(--panel-bg-strong));
+  border: 1px solid var(--control-border);
+  box-shadow: 0 8px 22px rgba(6, 25, 31, 0.1);
   box-sizing: border-box;
   overflow-x: auto;
   scrollbar-gutter: stable;
@@ -273,6 +290,41 @@ label, div.slider {
   margin-left: 0.3em; margin-bottom: 0.3em;
   color: #20333b;
 }
+div.control_container label:not(.numeric_control),
+div.control_group label:not(.numeric_control) {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+}
+label.numeric_control,
+div.slider {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.05fr) minmax(11rem, 1.8fr) minmax(5.5rem, 7rem);
+  gap: 8px;
+  align-items: center;
+  width: min(100%, 620px);
+  margin: 0 0 8px 0;
+  padding: 8px;
+  border: 1px solid rgba(183, 207, 214, 0.72);
+  border-radius: 8px;
+  background: var(--control-row);
+  box-sizing: border-box;
+  white-space: normal;
+}
+label.numeric_control:hover,
+div.slider:hover {
+  background: var(--control-row-hover);
+  border-color: var(--accent);
+}
+label.numeric_control input[type='text'],
+div.slider input[type='text'] {
+  order: 3;
+}
+label.numeric_control input[type='range'],
+div.slider input[type='range'] {
+  order: 2;
+}
 @media (prefers-color-scheme: dark) {
   label,
   div.slider {
@@ -296,7 +348,7 @@ textarea {
   min-height: 30px;
   border: 1px solid #9eb8bf;
   border-radius: 6px;
-  background: #ffffff;
+  background: var(--field-bg);
   color: var(--ink);
   box-sizing: border-box;
 }
@@ -318,6 +370,51 @@ div.control_container input[type='range'],
 div.control_group input[type='range'] {
   vertical-align: bottom;
   max-width: 100%;
+  min-width: 0;
+  accent-color: var(--range-thumb);
+}
+input[type='range'].numeric_slider,
+div.slider input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+input[type='range'].numeric_slider::-webkit-slider-runnable-track,
+div.slider input[type='range']::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--range-track));
+  border: 1px solid rgba(64, 112, 192, 0.16);
+}
+input[type='range'].numeric_slider::-webkit-slider-thumb,
+div.slider input[type='range']::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--range-thumb);
+  box-shadow: 0 3px 9px rgba(6, 25, 31, 0.28);
+}
+input[type='range'].numeric_slider::-moz-range-track,
+div.slider input[type='range']::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--range-track));
+  border: 1px solid rgba(64, 112, 192, 0.16);
+}
+input[type='range'].numeric_slider::-moz-range-thumb,
+div.slider input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--range-thumb);
+  box-shadow: 0 3px 9px rgba(6, 25, 31, 0.28);
 }
 
 button.icon {
@@ -834,19 +931,21 @@ body.platform-home a#logo {
     white-space: normal;
   }
   label,
+  label.numeric_control,
   div.slider {
     display: block;
     margin: 0 0 10px 0;
     font-size: 100%;
     line-height: 1.35;
   }
+  label.numeric_control,
   div.slider {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 6px;
     padding: 8px;
     border-radius: 6px;
-    background: rgba(64, 112, 192, 0.08);
+    background: var(--control-row);
   }
   div.control_container input,
   div.control_container select,
@@ -877,7 +976,7 @@ body.platform-home a#logo {
   div.control_container input[type='range'],
   div.control_group input[type='range'] {
     width: 100%;
-    min-height: 34px;
+    min-height: 38px;
   }
   div.control_container button,
   div.control_group button,
