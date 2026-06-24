@@ -204,6 +204,8 @@ private static readonly PT_BR_CONTROL_LABELS: {[key: string]: string} = {
   'graph draw mode': 'modo de desenho do gráfico',
   'graph points': 'pontos do gráfico',
   'draw width': 'espessura do traço',
+  'dots': 'pontos',
+  'lines': 'linhas',
   'x variable': 'variável X',
   'y variable': 'variável Y',
   'clear graph': 'limpar gráfico',
