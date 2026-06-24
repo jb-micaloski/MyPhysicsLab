@@ -339,6 +339,9 @@ sims/springs/TerminalSpring2DApp
 
 bld_apps := $(addprefix $(BUILD_DIR)/,$(app_names))
 
+support_js_names := sims/experimental/BlankSlateApp
+bld_support_js := $(addprefix $(BUILD_DIR)/,$(support_js_names))
+
 # Copy stylesheet.css to build/
 css_files := $(wildcard src/stylesheet*.css)
 bld_css := $(subst src/,$(BUILD_DIR)/,$(css_files))
@@ -384,14 +387,14 @@ $(BUILD_DIR)/test/SingleTest*.html : src/test/macros_test.html
 #     echo '"Mon Apr 3 07:51:06 PDT 2023"'
 #     "Mon Apr 3 07:51:06 PDT 2023"
 
-apps_js_en := $(addsuffix -en.js,$(bld_apps))
+apps_js_en := $(addsuffix -en.js,$(bld_apps) $(bld_support_js))
 $(apps_js_en): $(BUILD_DIR)/%-en.js : $(BUILD_DIR)/%.js
 	$(ESBUILD) $< --outfile=$@ --bundle --format=iife \
 	--platform=browser  \
 	--define:MPL_LOCALE='"en"' \
 	--define:MPL_BUILD_TIME='"$(shell date)"' --minify
 
-apps_js_de := $(addsuffix -de.js,$(bld_apps))
+apps_js_de := $(addsuffix -de.js,$(bld_apps) $(bld_support_js))
 $(apps_js_de): $(BUILD_DIR)/%-de.js : $(BUILD_DIR)/%.js
 	$(ESBUILD) $< --outfile=$@ --bundle --format=iife \
 	--platform=browser  \
