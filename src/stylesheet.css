@@ -207,6 +207,7 @@ div.control_container {
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 12px 30px rgba(6, 25, 31, 0.12);
   box-sizing: border-box;
+  overflow-x: auto;
 }
 @media (prefers-color-scheme: dark) {
   div.control_container {
@@ -226,6 +227,8 @@ div.control_group {
   border-radius: 8px;
   background: #eef5f6;
   border: 1px solid #d2e1e5;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 @media (prefers-color-scheme: dark) {
   div.control_group {
@@ -282,14 +285,41 @@ textarea {
 /* align slider controls, fixes Firefox layout */
 div.control_container input[type='range'] {
   vertical-align: bottom;
+  max-width: 100%;
 }
 
 button.icon {
   margin: 0;
-  padding: 2px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 5px;
   border: 1px solid transparent;
   border-radius: 6px;
   background-color: rgba(64, 112, 192, 0.1);
+  vertical-align: middle;
+}
+button.icon img {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+div.control_container button,
+div.control_group button {
+  min-height: 36px;
+  border: 1px solid #9eb8bf;
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: bold;
+  cursor: pointer;
+}
+@media (prefers-color-scheme: dark) {
+  div.control_container button,
+  div.control_group button {
+    border-color: #5e8790;
+    background: #123847;
+    color: #e7f3f5;
+  }
 }
 button.icon:active {
   background-color: rgba(240, 128, 48, 0.28);
@@ -673,6 +703,121 @@ body.platform-home a#logo {
 }
 
 @media (max-width: 780px) {
+  body:not(.platform-home) {
+    padding: 10px;
+  }
+  body:not(.platform-home) a#logo {
+    float: none;
+    display: inline-flex;
+    margin: 0 0 10px 0;
+  }
+  div#header_nav {
+    float: none;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 12px 0;
+    box-sizing: border-box;
+  }
+  a.nav_link {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  h1 {
+    clear: both;
+    font-size: 135%;
+    line-height: 1.2;
+  }
+  ul.horiz_tabs {
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  ul.horiz_tabs li {
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  div.control_container,
+  div.control_group {
+    padding: 10px;
+    border-radius: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  label {
+    white-space: normal;
+  }
+  label,
+  div.slider {
+    display: block;
+    margin: 0 0 10px 0;
+    font-size: 100%;
+    line-height: 1.35;
+  }
+  div.slider {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 8px;
+    border-radius: 6px;
+    background: rgba(64, 112, 192, 0.08);
+  }
+  div.control_container input,
+  div.control_container select,
+  div.control_group input,
+  div.control_group select {
+    margin: 6px 0 0 0;
+    font-size: 16px;
+  }
+  div.control_container input[type='text'],
+  div.control_container input[type='number'],
+  div.control_container select,
+  div.control_group input[type='text'],
+  div.control_group input[type='number'],
+  div.control_group select,
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 42px;
+  }
+  div.control_container input[type='checkbox'],
+  div.control_group input[type='checkbox'] {
+    width: 22px;
+    height: 22px;
+    min-height: 22px;
+    margin: 0 8px 0 0;
+    vertical-align: middle;
+  }
+  div.control_container input[type='range'],
+  div.control_group input[type='range'] {
+    width: 100%;
+    min-height: 34px;
+  }
+  div.control_container button,
+  div.control_group button,
+  button.icon {
+    min-width: 48px;
+    min-height: 48px;
+    margin: 2px;
+    padding: 7px;
+    font-size: 15px;
+  }
+  button.icon img {
+    width: 34px;
+    height: 34px;
+  }
+  textarea {
+    min-height: 180px;
+  }
   .platform-shell {
     padding: 12px;
   }

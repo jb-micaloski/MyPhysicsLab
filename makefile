@@ -268,7 +268,6 @@ $(BUILD_DIR)/sims/springs/MultiSpringApp%.html : src/sims/springs/MultiSpringApp
 
 app_names := sims/engine2D/BilliardsApp \
 sims/engine2D/Billiards2App \
-sims/engine2D/BlankApp \
 sims/engine2D/CarSuspensionApp \
 sims/engine2D/CartPendulum2App \
 sims/engine2D/ChainApp \
@@ -293,7 +292,6 @@ sims/engine2D/PolygonTestApp \
 sims/engine2D/RigidBodyApp \
 sims/engine2D/TestBodyApp \
 sims/experimental/BikeTimerApp \
-sims/experimental/BlankSlateApp \
 sims/experimental/GraphCalcApp \
 sims/experimental/GraphCalc2App \
 sims/experimental/MultiGraphCalc2App \
