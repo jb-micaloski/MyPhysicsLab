@@ -16,6 +16,13 @@ import { LabControl } from './LabControl.js'
 import { Observer, Parameter, SubjectEvent, ParameterNumber } from '../util/Observe.js'
 import { Util } from '../util/Util.js'
 
+type SliderRange = {
+  min: number,
+  max: number,
+  autoMin: boolean,
+  autoMax: boolean
+};
+
 /** A text input element for displaying and editing the numeric value of a target
 object.
 
@@ -508,23 +515,90 @@ private clamp(value: number): number {
 };
 
 private makeSliderRange(value: number): void {
+  const range = this.suggestSliderRange(value);
+  this.sliderMin_ = range.min;
+  this.sliderMax_ = range.max;
+  this.autoMin_ = range.autoMin;
+  this.autoMax_ = range.autoMax;
+};
+
+private suggestSliderRange(value: number): SliderRange {
   const lower = this.parameter_.getLowerLimit();
   const upper = this.parameter_.getUpperLimit();
-  this.autoMin_ = !Number.isFinite(lower);
-  this.autoMax_ = !Number.isFinite(upper);
-  const magnitude = Math.max(Math.abs(value), 1);
-  this.sliderMin_ = this.autoMin_ ? value - 2*magnitude : lower;
-  this.sliderMax_ = this.autoMax_ ? value + 2*magnitude : upper;
+  const safe = NumericControl.safeRangeForName(this.parameter_.getName());
+  let autoMin = !Number.isFinite(lower) && safe == null;
+  let autoMax = !Number.isFinite(upper) && safe == null;
+  let min: number;
+  let max: number;
+  if (safe != null) {
+    min = safe.min;
+    max = safe.max;
+  } else {
+    const conservative = Math.max(Math.abs(value), 1);
+    min = autoMin ? value - conservative : lower;
+    max = autoMax ? value + conservative : upper;
+  }
   if (Number.isFinite(lower)) {
-    this.sliderMin_ = Math.min(this.sliderMin_, value);
+    min = Math.max(min, lower);
   }
   if (Number.isFinite(upper)) {
-    this.sliderMax_ = Math.max(this.sliderMax_, value);
+    max = Math.min(max, upper);
   }
-  if (this.sliderMin_ >= this.sliderMax_) {
-    this.sliderMax_ = this.sliderMin_ + magnitude;
+  const margin = Math.max(0.1, 0.2*Math.abs(value));
+  if (value < min && !Number.isFinite(lower)) {
+    min = value - margin;
   }
+  if (value > max && !Number.isFinite(upper)) {
+    max = value + margin;
+  }
+  if (min >= max) {
+    const magnitude = Math.max(Math.abs(value), 1);
+    min = Number.isFinite(lower) ? lower : value - magnitude;
+    max = Number.isFinite(upper) ? upper : value + magnitude;
+  }
+  if (min >= max) {
+    max = min + 1;
+  }
+  return { min, max, autoMin, autoMax };
 };
+
+private static safeRangeForName(name: string): null|{min: number, max: number} {
+  for (const rule of NumericControl.SAFE_RANGES) {
+    if (rule.match.test(name)) {
+      return { min: rule.min, max: rule.max };
+    }
+  }
+  return null;
+};
+
+private static readonly SAFE_RANGES = [
+  { match: /TIME_STEP/, min: 0.001, max: 0.08 },
+  { match: /DISPLAY_PERIOD/, min: 0.005, max: 0.2 },
+  { match: /TIME_RATE/, min: 0, max: 3 },
+  { match: /TIME_WINDOW/, min: 1, max: 30 },
+  { match: /ELASTICITY|COEF.*FRICTION/, min: 0, max: 1 },
+  { match: /COLLISION_ACCURACY/, min: 0.05, max: 1 },
+  { match: /TOLERANCE|ACCURACY/, min: 0, max: 1 },
+  { match: /GRAVITY/, min: 0, max: 20 },
+  { match: /DAMPING|FRICTION|ANCHOR_DAMPING/, min: 0, max: 5 },
+  { match: /SPRING_DAMPING/, min: 0, max: 2 },
+  { match: /STIFFNESS|MAGNET_STRENGTH/, min: 0, max: 100 },
+  { match: /MASS|DENSITY|TENSION/, min: 0.1, max: 50 },
+  { match: /LENGTH|DIAMETER|RADIUS|SEPARATION|CENTER_OF_MASS/, min: 0.05, max: 20 },
+  { match: /ANGLE|SLOPE|ROTATE_RATIO/, min: -Math.PI, max: Math.PI },
+  { match: /VELOCITY|SPEED/, min: -50, max: 50 },
+  { match: /RPM/, min: 0, max: 10000 },
+  { match: /TORQUE|FORCE/, min: 0, max: 100 },
+  { match: /AMPLITUDE/, min: 0, max: 10 },
+  { match: /FREQUENCY/, min: 0, max: 10 },
+  { match: /POSITION|DISPLACEMENT|ANCHOR_.*[XY]/, min: -20, max: 20 },
+  { match: /PE_OFFSET|POTENTIAL_ENERGY_OFFSET|ZERO_ENERGY_LEVEL/, min: -100, max: 100 },
+  { match: /NUM|NUMBER|LINKS|POINTS|MAGNETS|OBJECTS|SEED/, min: 0, max: 100 },
+  { match: /GRAPH_WIDTH|SIM_WIDTH|TIME_GRAPH_WIDTH/, min: 0.2, max: 1 },
+  { match: /^WIDTH$|^HEIGHT$/, min: 200, max: 1200 },
+  { match: /LINE_WIDTH|DRAW_WIDTH/, min: 0.5, max: 6 },
+  { match: /REPEAT_TIME/, min: 0.25, max: 20 }
+] as const;
 
 private syncSliderToValue(): void {
   if (this.slider_ == null) {

@@ -182,6 +182,7 @@ export class TabLayout extends AbstractSubject implements Subject, Layout, Subje
   private term_input: null|HTMLInputElement;
   private terminal: Terminal;
   private div_contain: HTMLDivElement;
+  private mobileControlsButton: HTMLButtonElement|null = null;
   private div_sim: HTMLDivElement;
   private simCanvas: LabCanvas;
   /** The 'show sim' checkbox is added to the graph views. */
@@ -254,6 +255,8 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   this.terminal = new Terminal(this.term_input, term_output);
   Terminal.stdRegex(this.terminal);
   this.div_contain = Util.getElementById(elem_ids.container) as HTMLDivElement;
+  this.div_contain.classList.add('simulation_workspace');
+  this.addMobileControlsButton();
   if (this.debug_layout) {
     this.div_contain.style.border = 'dashed 1px red';
   }
@@ -270,6 +273,8 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   this.simCanvas = new LabCanvas(canvas, 'SIM_CANVAS');
   this.simCanvas.setSize(canvasWidth, canvasHeight);
   this.div_sim.appendChild(this.simCanvas.getCanvas());
+  this.addPopoutButton(this.div_sim, this.simCanvas,
+      Util.localizeControlLabel('simulation'));
 
   // the 'show sim' checkbox.  The default 'checked' property is determined by the
   // presence of the word 'checked' in the HTML for the checkbox like this:
@@ -291,6 +296,8 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   canvasWidth = Math.max(canvasWidth, canvasHeight);
   this.graphCanvas.setSize(canvasWidth, canvasWidth);
   this.div_graph.appendChild(canvas2);
+  this.addPopoutButton(this.div_graph, this.graphCanvas,
+      Util.localizeControlLabel('graph'));
 
   this.div_graph_controls =
       Util.getElementById(elem_ids.graph_controls) as HTMLDivElement;
@@ -334,6 +341,8 @@ constructor(elem_ids: ElementIDs, canvasWidth: number = 800, canvasHeight: numbe
   this.timeGraphCanvas = new LabCanvas(canvas3, 'TIME_GRAPH_CANVAS');
   this.timeGraphCanvas.setSize(canvasWidth, canvasWidth);
   this.div_time_graph.appendChild(canvas3);
+  this.addPopoutButton(this.div_time_graph, this.timeGraphCanvas,
+      Util.localizeControlLabel('time graph'));
 
   this.div_time_graph_controls =
       Util.getElementById(elem_ids.time_graph_controls) as HTMLDivElement;
@@ -408,6 +417,68 @@ addControl(control: LabControl, opt_add = true): LabControl {
   }
   this.controls_.push(control);
   return control;
+};
+
+private addMobileControlsButton(): void {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'mobile-controls-toggle';
+  button.textContent = Util.localizeControlLabel('controls');
+  button.setAttribute('aria-expanded', 'false');
+  button.addEventListener('click', () => this.toggleControlsDrawer());
+  this.div_contain.parentElement?.insertBefore(button, this.div_contain);
+  this.mobileControlsButton = button;
+};
+
+private addPopoutButton(viewDiv: HTMLDivElement, labCanvas: LabCanvas,
+    title: string): void {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'popout_canvas';
+  button.textContent = 'destacar';
+  button.title = 'Destacar em outra janela';
+  button.addEventListener('click', () => this.openCanvasWindow(labCanvas, title));
+  viewDiv.appendChild(button);
+};
+
+private openCanvasWindow(labCanvas: LabCanvas, title: string): void {
+  const out = window.open('', '_blank', 'width=900,height=700');
+  if (out == null) {
+    return;
+  }
+  out.document.title = title;
+  out.document.body.innerHTML = '';
+  const style = out.document.createElement('style');
+  style.textContent = 'html,body{margin:0;width:100%;height:100%;background:#071820;color:#e7f3f5;font-family:Arial,sans-serif;overflow:hidden}header{height:42px;display:flex;align-items:center;padding:0 14px;background:#0b2530;font-weight:bold}canvas{display:block;width:100vw;height:calc(100vh - 42px);background:#ffffff}';
+  out.document.head.appendChild(style);
+  const header = out.document.createElement('header');
+  header.textContent = title;
+  const canvas = out.document.createElement('canvas');
+  out.document.body.appendChild(header);
+  out.document.body.appendChild(canvas);
+  const draw = () => {
+    if (out.closed) {
+      return;
+    }
+    const source = labCanvas.getCanvas();
+    if (canvas.width != source.width || canvas.height != source.height) {
+      canvas.width = source.width;
+      canvas.height = source.height;
+    }
+    const context = canvas.getContext('2d');
+    if (context != null) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(source, 0, 0);
+    }
+    out.requestAnimationFrame(draw);
+  };
+  draw();
+};
+
+private toggleControlsDrawer(force?: boolean): void {
+  const isOpen = force ?? !this.div_contain.classList.contains('controls_drawer_open');
+  this.div_contain.classList.toggle('controls_drawer_open', isOpen);
+  this.mobileControlsButton?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 };
 
 /** Positions the controls in relation to the canvas. We use CSS style `display:
@@ -573,6 +644,7 @@ private redoLayout(): void {
   // WARNING-NOTE: viewport size can change if scrollbars appear or disappear
   // due to layout changes.
   const view_width = Util.getViewportSize()[0];
+  const singleWidth = view_width > 900 ? 0.64 : 0.95;
   this.div_sim.style.float = 'left';
   this.div_graph.style.float = 'left';
   this.div_time_graph.style.float = 'left';
@@ -583,7 +655,7 @@ private redoLayout(): void {
       this.div_graph_controls.style.display = 'none';
       this.div_time_graph.style.display = 'none';
       this.div_time_graph_controls.style.display = 'none';
-      this.setDisplaySize(0.95*this.simWidth_, this.div_graph);
+      this.setDisplaySize(singleWidth*this.simWidth_, this.div_graph);
       this.alignCanvasControls(this.div_sim, this.div_sim_controls);
       this.show_sim_label.style.display = 'none';
       break;
@@ -592,7 +664,7 @@ private redoLayout(): void {
       this.div_sim_controls.style.display = 'none';
       this.div_time_graph.style.display = 'none';
       this.div_time_graph_controls.style.display = 'none';
-      this.setDisplaySize(0.95*this.graphWidth_, this.div_graph);
+      this.setDisplaySize(singleWidth*this.graphWidth_, this.div_graph);
       this.alignCanvasControls(this.div_graph, this.div_graph_controls);
       this.show_sim_cb.checked = false;
       this.show_sim_label.style.display = 'inline';
@@ -604,7 +676,7 @@ private redoLayout(): void {
       if (view_width > 600) {
         this.setDisplaySize(0.49, this.div_graph);
       } else {
-        this.setDisplaySize(0.95*this.graphWidth_, this.div_graph);
+        this.setDisplaySize(singleWidth*this.graphWidth_, this.div_graph);
       }
       this.alignCanvasControls(this.div_graph, this.div_graph_controls, this.div_sim);
       this.show_sim_cb.checked = true;
@@ -615,7 +687,7 @@ private redoLayout(): void {
       this.div_graph_controls.style.display = 'none';
       this.div_sim.style.display = 'none';
       this.div_sim_controls.style.display = 'none';
-      this.setDisplaySize(0.95*this.timeGraphWidth_, this.div_time_graph);
+      this.setDisplaySize(singleWidth*this.timeGraphWidth_, this.div_time_graph);
       this.alignCanvasControls(this.div_time_graph, this.div_time_graph_controls);
       this.show_sim_cb.checked = false;
       this.show_sim_label.style.display = 'inline';
@@ -627,7 +699,7 @@ private redoLayout(): void {
       if (view_width > 600) {
         this.setDisplaySize(0.49, this.div_time_graph);
       } else {
-        this.setDisplaySize(0.95*this.timeGraphWidth_, this.div_time_graph);
+        this.setDisplaySize(singleWidth*this.timeGraphWidth_, this.div_time_graph);
       }
       this.alignCanvasControls(this.div_time_graph, this.div_time_graph_controls,
           this.div_sim);

@@ -269,6 +269,51 @@ div.control_group {
   overflow-x: auto;
   scrollbar-gutter: stable;
 }
+.simulation_workspace {
+  position: relative;
+}
+.view_container .view_group {
+  position: relative;
+}
+.popout_canvas {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(217, 237, 240, 0.34);
+  border-radius: 6px;
+  background: rgba(7, 24, 32, 0.72);
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(6, 25, 31, 0.24);
+}
+.popout_canvas:hover {
+  background: rgba(29, 83, 104, 0.92);
+}
+.mobile-controls-toggle {
+  display: none;
+}
+@media (min-width: 781px) {
+  .view_container .view_group {
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .view_container .view_group > canvas {
+    flex: 1 1 auto;
+  }
+  .view_container .control_group,
+  .control_container .control_group {
+    width: min(370px, 34vw);
+    max-height: min(78vh, 760px);
+    overflow-y: auto;
+  }
+  .view_container .control_group {
+    margin-left: 12px;
+  }
+}
 @media (prefers-color-scheme: dark) {
   div.control_group {
     background: #0f303d;
@@ -994,6 +1039,52 @@ body.platform-home a#logo {
   button.icon img {
     width: 34px;
     height: 34px;
+  }
+  .mobile-controls-toggle {
+    display: inline-flex;
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    z-index: 1100;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border: 1px solid rgba(217, 237, 240, 0.3);
+    border-radius: 8px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+    color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 10px 24px rgba(6, 25, 31, 0.28);
+  }
+  .control_container .control_group,
+  .view_container .control_group {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(86vw, 370px);
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    border-radius: 8px 0 0 8px;
+    overflow-y: auto;
+    transform: translateX(112%);
+    transition: transform 180ms ease;
+    z-index: 1050;
+    box-shadow: -14px 0 34px rgba(6, 25, 31, 0.28);
+  }
+  .control_container.controls_drawer_open .control_group,
+  .view_container.controls_drawer_open .control_group {
+    transform: translateX(0);
+  }
+  .control_container.controls_drawer_open::before,
+  .view_container.controls_drawer_open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1040;
+    background: rgba(7, 24, 32, 0.36);
   }
   textarea {
     min-height: 180px;

@@ -95,6 +95,7 @@ static LOCALE: string = MPL_LOCALE;
 
 private static readonly PT_BR_CONTROL_LABELS: {[key: string]: string} = {
   'sim': 'simulação',
+  'simulation': 'simulação',
   'graph': 'gráfico',
   'time graph': 'gráfico temporal',
   'multi graph': 'multigráfico',
