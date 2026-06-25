@@ -32,6 +32,12 @@ const KE = 4;
 const PE = 5;
 const TE = 6;
 const TIME = 7;
+const ANCHOR1_X = 8;
+const ANCHOR1_Y = 9;
+const ANCHOR2_X = 10;
+const ANCHOR2_Y = 11;
+const ANCHOR3_X = 12;
+const ANCHOR3_Y = 13;
 
 /** A 2D oscillator with one central mass connected to three fixed springs.
 
@@ -75,7 +81,13 @@ constructor(opt_name?: string) {
     EnergyInfo.en.KINETIC_ENERGY,
     EnergyInfo.en.POTENTIAL_ENERGY,
     EnergyInfo.en.TOTAL_ENERGY,
-    VarsList.en.TIME
+    VarsList.en.TIME,
+    TripleSpringSim.en.ANCHOR1_X,
+    TripleSpringSim.en.ANCHOR1_Y,
+    TripleSpringSim.en.ANCHOR2_X,
+    TripleSpringSim.en.ANCHOR2_Y,
+    TripleSpringSim.en.ANCHOR3_X,
+    TripleSpringSim.en.ANCHOR3_Y
   ];
   const i18n_names = [
     TripleSpringSim.i18n.X_POSITION,
@@ -85,14 +97,20 @@ constructor(opt_name?: string) {
     EnergyInfo.i18n.KINETIC_ENERGY,
     EnergyInfo.i18n.POTENTIAL_ENERGY,
     EnergyInfo.i18n.TOTAL_ENERGY,
-    VarsList.i18n.TIME
+    VarsList.i18n.TIME,
+    TripleSpringSim.i18n.ANCHOR1_X,
+    TripleSpringSim.i18n.ANCHOR1_Y,
+    TripleSpringSim.i18n.ANCHOR2_X,
+    TripleSpringSim.i18n.ANCHOR2_Y,
+    TripleSpringSim.i18n.ANCHOR3_X,
+    TripleSpringSim.i18n.ANCHOR3_Y
   ];
   const va = new VarsList(var_names, i18n_names, this.getName()+'_VARS');
   this.setVarsList(va);
   va.setComputed(KE, PE, TE);
   this.bob_.setMass(1.0);
   this.springs_.forEach(spring => spring.setDamping(0.04));
-  this.updateAnchorPositions();
+  this.setAnchorObjectsFromRadius();
   this.getSimList().add(this.anchors_[0], this.anchors_[1], this.anchors_[2],
       this.bob_, this.springs_[0], this.springs_[1], this.springs_[2]);
   let pn: ParameterNumber;
@@ -149,6 +167,7 @@ getClassName() {
 /** Sets the central mass to the reference state and zeroes potential energy. */
 restState(): void {
   const vars = this.getVarsList().getValues();
+  this.captureAnchorPositions(vars);
   vars[X] = 0;
   vars[Y] = 0;
   vars[VX] = 0;
@@ -193,15 +212,35 @@ modifyObjects(): void {
 private moveObjects(vars: number[]): void {
   this.bob_.setPosition(new Vector(vars[X], vars[Y]));
   this.bob_.setVelocity(new Vector(vars[VX], vars[VY], 0));
-  this.updateAnchorPositions();
+  this.anchors_[0].setPosition(new Vector(vars[ANCHOR1_X], vars[ANCHOR1_Y]));
+  this.anchors_[1].setPosition(new Vector(vars[ANCHOR2_X], vars[ANCHOR2_Y]));
+  this.anchors_[2].setPosition(new Vector(vars[ANCHOR3_X], vars[ANCHOR3_Y]));
 };
 
-private updateAnchorPositions(): void {
+private setAnchorObjectsFromRadius(): void {
   const angles = [Math.PI/4, Math.PI/2, 3*Math.PI/4];
   this.anchors_.forEach((anchor, index) => {
     const angle = angles[index];
     anchor.setPosition(new Vector(this.anchorRadius_ * Math.cos(angle),
         this.anchorRadius_ * Math.sin(angle)));
+  });
+};
+
+private setAnchorVarsFromRadius(vars: number[]): void {
+  const angles = [Math.PI/4, Math.PI/2, 3*Math.PI/4];
+  angles.forEach((angle, index) => {
+    const offset = ANCHOR1_X + 2*index;
+    vars[offset] = this.anchorRadius_ * Math.cos(angle);
+    vars[offset + 1] = this.anchorRadius_ * Math.sin(angle);
+  });
+};
+
+private captureAnchorPositions(vars: number[]): void {
+  this.anchors_.forEach((anchor, index) => {
+    const offset = ANCHOR1_X + 2*index;
+    const position = anchor.getPosition();
+    vars[offset] = position.getX();
+    vars[offset + 1] = position.getY();
   });
 };
 
@@ -211,21 +250,30 @@ startDrag(simObject: null|SimObject, _location: Vector, _offset: Vector,
   if (simObject == this.bob_) {
     this.isDragging_ = true;
     return true;
+  } else if (this.anchors_.indexOf(simObject as PointMass) >= 0) {
+    return true;
   }
   return false;
 };
 
 /** @inheritDoc */
 mouseDrag(simObject: null|SimObject, location: Vector, offset: Vector): void {
-  if (simObject != this.bob_) {
-    return;
-  }
   const va = this.getVarsList();
   const p = location.subtract(offset);
-  va.setValue(X, p.getX());
-  va.setValue(Y, p.getY());
-  va.setValue(VX, 0);
-  va.setValue(VY, 0);
+  const anchorIndex = this.anchors_.indexOf(simObject as PointMass);
+  if (anchorIndex >= 0) {
+    const varIndex = ANCHOR1_X + 2*anchorIndex;
+    va.setValue(varIndex, p.getX());
+    va.setValue(varIndex + 1, p.getY());
+    va.incrSequence(PE, TE);
+  } else if (simObject == this.bob_) {
+    va.setValue(X, p.getX());
+    va.setValue(Y, p.getY());
+    va.setValue(VX, 0);
+    va.setValue(VY, 0);
+  } else {
+    return;
+  }
   this.moveObjects(va.getValues());
 };
 
@@ -300,8 +348,12 @@ getAnchorRadius(): number {
 
 setAnchorRadius(value: number): void {
   this.anchorRadius_ = value;
-  this.updateAnchorPositions();
-  this.getVarsList().incrSequence(PE, TE);
+  const va = this.getVarsList();
+  const vars = va.getValues();
+  this.setAnchorVarsFromRadius(vars);
+  va.setValues(vars);
+  this.moveObjects(vars);
+  va.incrSequence(PE, TE);
   this.broadcastParameter(TripleSpringSim.en.ANCHOR_RADIUS);
 };
 
@@ -326,6 +378,12 @@ setSpringStiffness(value: number): void {
 };
 
 static readonly en: i18n_strings = {
+  ANCHOR1_X: 'anchor 1 X',
+  ANCHOR1_Y: 'anchor 1 Y',
+  ANCHOR2_X: 'anchor 2 X',
+  ANCHOR2_Y: 'anchor 2 Y',
+  ANCHOR3_X: 'anchor 3 X',
+  ANCHOR3_Y: 'anchor 3 Y',
   ANCHOR_RADIUS: 'anchor radius',
   X_POSITION: 'X position',
   Y_POSITION: 'Y position',
@@ -340,6 +398,12 @@ static readonly en: i18n_strings = {
 };
 
 static readonly de_strings: i18n_strings = {
+  ANCHOR1_X: 'Anker 1 X',
+  ANCHOR1_Y: 'Anker 1 Y',
+  ANCHOR2_X: 'Anker 2 X',
+  ANCHOR2_Y: 'Anker 2 Y',
+  ANCHOR3_X: 'Anker 3 X',
+  ANCHOR3_Y: 'Anker 3 Y',
   ANCHOR_RADIUS: 'Anker Radius',
   X_POSITION: 'X Position',
   Y_POSITION: 'Y Position',
@@ -359,6 +423,12 @@ static readonly i18n = Util.LOCALE === 'de' ? TripleSpringSim.de_strings :
 } // end class
 
 type i18n_strings = {
+  ANCHOR1_X: string,
+  ANCHOR1_Y: string,
+  ANCHOR2_X: string,
+  ANCHOR2_Y: string,
+  ANCHOR3_X: string,
+  ANCHOR3_Y: string,
   ANCHOR_RADIUS: string,
   X_POSITION: string,
   Y_POSITION: string,

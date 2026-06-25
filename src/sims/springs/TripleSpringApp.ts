@@ -53,6 +53,7 @@ constructor(elem_ids: ElementIDs) {
     anchor.setFillStyle('#f08030');
     anchor.setStrokeStyle('#d9edf0');
     anchor.setThickness(3);
+    anchor.setZIndex(1);
     this.anchors.push(anchor);
     this.displayList.add(anchor);
   });
@@ -60,6 +61,7 @@ constructor(elem_ids: ElementIDs) {
   this.bob.setFillStyle('#70a8c4');
   this.bob.setStrokeStyle('#ffffff');
   this.bob.setThickness(3);
+  this.bob.setZIndex(2);
   this.displayList.add(this.bob);
   ['spring1', 'spring2', 'spring3'].forEach(name => {
     const spring = new DisplaySpring(this.simList.getSpring(name));
@@ -67,6 +69,7 @@ constructor(elem_ids: ElementIDs) {
     spring.setThickness(3);
     spring.setColorCompressed('#f08030');
     spring.setColorExpanded('#70d0c0');
+    spring.setZIndex(0);
     this.springs.push(spring);
     this.displayList.add(spring);
   });
