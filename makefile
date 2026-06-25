@@ -223,6 +223,8 @@ testbody: $(foreach loc,$(LOCALE),\
   $(BUILD_DIR)/sims/engine2D/TestBodyApp-$(loc).html )
 testviewer: $(foreach loc,$(LOCALE),\
   $(BUILD_DIR)/test/TestViewerApp-$(loc).html )
+triplespring: $(foreach loc,$(LOCALE),\
+  $(BUILD_DIR)/sims/springs/TripleSpringApp-$(loc).html )
 unittest: $(foreach loc,$(LOCALE),\
   $(BUILD_DIR)/test/UnitTest-$(loc).html )
 vectorgraphpendulum: $(foreach loc,$(LOCALE),\
@@ -334,7 +336,8 @@ sims/springs/SingleSpring2App \
 sims/springs/SingleSpring3App \
 sims/springs/Spring2DApp \
 sims/springs/TerminalSpringApp \
-sims/springs/TerminalSpring2DApp
+sims/springs/TerminalSpring2DApp \
+sims/springs/TripleSpringApp
 
 
 bld_apps := $(addprefix $(BUILD_DIR)/,$(app_names))

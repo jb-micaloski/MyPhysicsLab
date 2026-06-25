@@ -158,6 +158,7 @@ private static readonly PT_BR_CONTROL_LABELS: {[key: string]: string} = {
   'anchor1 y': 'âncora 1 Y',
   'anchor2 x': 'âncora 2 X',
   'anchor2 y': 'âncora 2 Y',
+  'anchor radius': 'raio dos apoios',
   'chain links': 'elos da corrente',
   'straight line': 'linha reta',
   'attach right': 'fixar à direita',

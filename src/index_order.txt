@@ -67,3 +67,4 @@ sims/springs/SingleSpring3App
 sims/springs/Spring2DApp
 sims/springs/TerminalSpringApp
 sims/springs/TerminalSpring2DApp
+sims/springs/TripleSpringApp
